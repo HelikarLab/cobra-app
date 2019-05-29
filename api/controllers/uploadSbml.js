@@ -1,33 +1,45 @@
-const multer = require('multer')
 const { PythonShell } = require('python-shell')
 
-let filename
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './uploads')
-  },
-  filename: function (req, file, callback) {
-    filename = file.originalname
-    callback(null, file.originalname)
-  }
-})
-const upload = multer({ storage: storage }).single('file')
 
 module.exports = async function (req, res) {
-  await upload(req, res, function (err) {
-    if (err) {
-      return res.end('Error uploading file.')
+
+    console.log("success at 8080");
+
+    if (req.files) {
+
+      console.log(req.files)
+      var file = req.files.file,
+          name = file.name,
+          type = file.mimetype;
+
+      var uploadpath =  'uploads/' + name;
+      file.mv(uploadpath,function(err){
+        if(err){
+          console.log("File Upload Failed",name,err);
+        }
+        else {
+          console.log("File Uploaded",name);
+        }
+      });
+      const options = {
+        args: [name]
+      }
+
+
+      let test = PythonShell.run('sbmlParser.py', options, function (err, data) {
+        if (err) {
+          console.log("if error")
+          console.error(err)
+        } else {
+          console.log("No error")
+          console.log("nodejs :" + data)
+        }
+        res.json(data);
+      })
+
     }
-  })
-  const options = {
-    args: [filename]
-  }
-  PythonShell.run('sbmlParser.py', options, function (err, data) {
-    if (err) {
-      console.error(err)
-    } else {
-      console.log(data)
+    else {
+      res.end();
     }
-  })
-  res.end('Success')
+
 }

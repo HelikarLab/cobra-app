@@ -1,47 +1,51 @@
 import sys
-import os.path
-import libsbml
+from libsbml import *
+import json
 
-def main (args):
-    """usage: convertFbcToCobra.py input-filename output-filename """
-    if len(args) != 3:
-     print(main.__doc__)
-     sys.exit(1)
 
-    infile  = args[1]
-    outfile = args[2]
+path = "uploads/" + sys.argv[1]
+reader = SBMLReader()
+document = reader.readSBML(path)
 
-    if not os.path.exists(infile):
-        print("[Error] %s : No such file." % (infile))
-        sys.exit(1)
+model = document.getModel()
 
-    reader  = libsbml.SBMLReader()
-    writer  = libsbml.SBMLWriter()
-    path = "../uploads/" + sys.argv[1]
-    sbmldoc = reader.readSBML(path)
+'''
+print("Number of Errors: ", document.getNumErrors())
+print("Level: ", document.getLevel())
+print("Model: ", model)
+print("Version: ", document.getVersion())
 
-    if sbmldoc.getNumErrors() > 0:
-        if sbmldoc.getError(0).getErrorId() == libsbml.XMLFileUnreadable:
-            # Handle case of unreadable file here.
-            sbmldoc.printErrors()
-        elif sbmldoc.getError(0).getErrorId() == libsbml.XMLFileOperationError:
-            # Handle case of other file error here.
-            sbmldoc.printErrors()
-        else:
-            # Handle other error cases here.
-            sbmldoc.printErrors()
+print("Number of Species: ", model.getNumSpecies())
+print("List of  Species: ", model.getListOfSpecies())
+print("List of Reactions: ", model.getListOfReactions())
 
-        #sys.exit(1)
+print(listOfReactions[:5])
+'''
+listOfSpecies = model.getListOfSpecies()
+listOfReactions = model.getListOfReactions()
 
-    props = libsbml.ConversionProperties()
-    props.addOption("convert fbc to cobra", True, "Convert FBC model to Cobra model")
-    result = sbmldoc.convert(props)
-    if (result != libsbml.LIBSBML_OPERATION_SUCCESS):
-        print("[Error] Conversion failed... (%d)" %(result))
-        sys.exit(1)
+'''
 
-    writer.writeSBML(sbmldoc, outfile)
-    print("[OK] converted file %s to %s" % (infile, outfile))
 
-if __name__ == '__main__':
-    main(sys.argv)
+'''
+
+lSpecies = []
+for species in listOfSpecies[:5]:
+    lSpecies.append(str(species))
+
+lReactions = []
+for reactions in listOfReactions[:5]:
+    lReactions.append(str(reactions))
+
+data = {
+    "noOfErrors": document.getNumErrors(),
+    "level": document.getLevel(),
+    "version": document.getVersion(),
+    "noOfSpecies": model.getNumSpecies(),
+    "listOfSpecies": lSpecies,
+    "listOfReactions": lReactions
+}
+
+print(json.dumps(data))
+
+sys.stdout.flush()
