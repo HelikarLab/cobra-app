@@ -1,49 +1,29 @@
 import sys
-from libsbml import *
+import cobra
 import json
 
+path = 'uploads/' + sys.argv[1]
 
-path = "uploads/" + sys.argv[1]
-reader = SBMLReader()
-document = reader.readSBML(path)
+model = cobra.io.read_sbml_model(path)
 
-model = document.getModel()
-
-'''
-print("Number of Errors: ", document.getNumErrors())
-print("Level: ", document.getLevel())
-print("Model: ", model)
-print("Version: ", document.getVersion())
-
-print("Number of Species: ", model.getNumSpecies())
-print("List of  Species: ", model.getListOfSpecies())
-print("List of Reactions: ", model.getListOfReactions())
-
-print(listOfReactions[:5])
-'''
-listOfSpecies = model.getListOfSpecies()
-listOfReactions = model.getListOfReactions()
-
-'''
+reactionData = []
+r = 0
+for r in range(0,10):
+    reactionData.append({'equation':model.reactions[r].reaction,'reversibility':model.reactions[r].reversibility})
 
 
-'''
-
-lSpecies = []
-for species in listOfSpecies[:5]:
-    lSpecies.append(str(species))
-
-lReactions = []
-for reactions in listOfReactions[:5]:
-    lReactions.append(str(reactions))
+metabolitesData = []
+m = 0
+for m in range(0,10):
+    metabolitesData.append({'id':model.metabolites[m].id, 'name' : model.metabolites[m].name})
 
 data = {
-    "noOfErrors": document.getNumErrors(),
-    "level": document.getLevel(),
-    "version": document.getVersion(),
-    "noOfSpecies": model.getNumSpecies(),
-    "listOfSpecies": lSpecies,
-    "listOfReactions": lReactions
+    "model": model.name,
+    "noOfMetabolites": len(model.metabolites),
+    "listOfSpecies": metabolitesData,
+    "noOfReactions": len(model.reactions),
+    "listOfReactions": reactionData,
+    "noOfGenes": len(model.genes)
 }
 
 print(json.dumps(data))

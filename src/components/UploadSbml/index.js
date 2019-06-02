@@ -44,48 +44,60 @@ class UploadSbml extends Component{
                 <hr/>
 
                 <div>
-                    Version:
+                    Model: &nbsp;&nbsp;
                     {
-                        this.state && this.state.info && JSON.parse(this.state.info[0]).version
+                        this.state && this.state.info && JSON.parse(this.state.info[0]).model
                     }
                 </div>
                 <br/>
 
                 <div>
-                    Total Number Of Species:
+                    Total Number Of Reactions:&nbsp;&nbsp;
                     {
-                        this.state && this.state.info && JSON.parse(this.state.info[0]).noOfSpecies
+                        this.state && this.state.info && JSON.parse(this.state.info[0]).noOfReactions
+                    }
+                </div>
+                <br/>
+                <div>
+                    List Of Reactions  [First 10]:<br/>
+                    {
+                        this.state && this.state.info &&
+                        JSON.parse(this.state.info[0]).listOfReactions
+                            .map( (key,index) =>
+                                <div>
+                                    <hr/>
+                                    Reaction: {index+1}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09; equation: {JSON.parse(this.state.info[0]).listOfReactions[index].equation}&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09; reversibility:{JSON.parse(this.state.info[0]).listOfReactions[index].reversibility.toString()}
+                                </div>)
+
                     }
                 </div>
                 <br/>
 
                 <div>
-                    LIST OF SPECIES[First 5]:<br/>
+                    Total Number Of Metabolites:&nbsp;&nbsp;
                     {
-                        this.state && this.state.info &&
-                        JSON.parse(this.state.info[0]).listOfSpecies.map((species, index) => {
-                            return <div>
-                                {
-                                    species
-                                }
-                            </div>
-                        })
+                        this.state && this.state.info && JSON.parse(this.state.info[0]).noOfMetabolites
                     }
                 </div>
                 <br/>
+
                 <div>
-                    LIST OF Reactions[First 5]:<br/>
+                    List Of Metabolites  [First 10]:<br/>
                     {
-                        this.state && this.state.info &&
-                        JSON.parse(this.state.info[0]).listOfReactions.map((reactions, index) => {
-                            return <div>
-                                {
-                                    reactions
-                                }
-                            </div>
-                        })
+                        this.state && this.state.info && JSON.parse(this.state.info[0]).listOfSpecies
+                            .map( (key,index) =>
+                                <div>
+                                    <hr/>
+                                    Metabolite: {index+1}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09; id: {JSON.parse(this.state.info[0]).listOfSpecies[index].id}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#09;name:{JSON.parse(this.state.info[0]).listOfSpecies[index].name}
+                                </div>)
+
                     }
                 </div>
+                <br/>
 
             </React.Fragment>
         )
