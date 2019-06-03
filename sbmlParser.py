@@ -14,7 +14,7 @@ for r in range(len(model.reactions)):
 
 metabolitesData = []
 m = 0
-for m in range(len(model.metabolites):
+for m in range(len(model.metabolites)):
     metabolitesData.append({'id':model.metabolites[m].id, 'name' : model.metabolites[m].name,'formula':model.metabolites[m].formula})
 
 genesData = []

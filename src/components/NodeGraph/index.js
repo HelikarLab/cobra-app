@@ -8,17 +8,17 @@ function NodeGraph (props) {
     <hr/>
     <dl className={'row'}>
 
-      <dt className={'col-sm-6'}>Model Name: </dt>
-      <dd className={'col-sm-6'}>{props.modelName}</dd>
+      <dt className={'col-sm-5'}>Model Name: </dt>
+      <dd className={'col-sm-7'}>{props.modelName}</dd>
 
-      <dt className={'col-sm-6'}>Number of Metabolites: </dt>
-      <dd className={'col-sm-6'}>{props.noOfMetabolites}</dd>
+      <dt className={'col-sm-5'}>Number of Metabolites: </dt>
+      <dd className={'col-sm-7'}>{props.noOfMetabolites}</dd>
 
-      <dt className={'col-sm-6'}>Number Of Reactions: </dt>
-      <dd className={'col-sm-6'}>{props.noOfReactions}</dd>
+      <dt className={'col-sm-5'}>Number Of Reactions: </dt>
+      <dd className={'col-sm-7'}>{props.noOfReactions}</dd>
 
-      <dt className={'col-sm-6'}>Number of Genes: </dt>
-      <dd className={'col-sm-6'}>{props.noOfGenes}</dd>
+      <dt className={'col-sm-5'}>Number of Genes: </dt>
+      <dd className={'col-sm-7'}>{props.noOfGenes}</dd>
 
     </dl>
   </div>

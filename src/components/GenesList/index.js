@@ -35,7 +35,7 @@ class GenesList extends React.Component {
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
-                            <th>Formula</th>
+                            <th>Functional</th>
                         </tr>
                         </thead>
                         <tbody>
