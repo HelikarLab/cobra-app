@@ -8,22 +8,31 @@ model = cobra.io.read_sbml_model(path)
 
 reactionData = []
 r = 0
-for r in range(0,10):
-    reactionData.append({'equation':model.reactions[r].reaction,'reversibility':model.reactions[r].reversibility})
+for r in range(len(model.reactions)):
+    reactionData.append({'id':model.reactions[r].id,'equation':model.reactions[r].reaction,'reversibility':model.reactions[r].reversibility})
 
 
 metabolitesData = []
 m = 0
-for m in range(0,10):
-    metabolitesData.append({'id':model.metabolites[m].id, 'name' : model.metabolites[m].name})
+for m in range(len(model.metabolites):
+    metabolitesData.append({'id':model.metabolites[m].id, 'name' : model.metabolites[m].name,'formula':model.metabolites[m].formula})
+
+genesData = []
+g = 0
+for g in range(len(model.genes)):
+    genesData.append({'id':model.genes[g].id, 'name' : model.genes[g].name,'functional':model.genes[g].functional})
+
 
 data = {
-    "model": model.name,
-    "noOfMetabolites": len(model.metabolites),
-    "listOfSpecies": metabolitesData,
-    "noOfReactions": len(model.reactions),
-    "listOfReactions": reactionData,
-    "noOfGenes": len(model.genes)
+    "model":{
+        "name": model.name,
+        "noOfMetabolites": len(model.metabolites),
+        "listOfMetabolites": metabolitesData,
+        "noOfReactions": len(model.reactions),
+        "listOfReactions": reactionData,
+        "noOfGenes": len(model.genes),
+        "listOfGenes": genesData
+    }
 }
 
 print(json.dumps(data))

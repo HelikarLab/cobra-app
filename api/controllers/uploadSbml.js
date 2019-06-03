@@ -1,5 +1,5 @@
 const { PythonShell } = require('python-shell')
-
+const fs = require('fs')
 
 module.exports = async function (req, res) {
 
@@ -9,32 +9,31 @@ module.exports = async function (req, res) {
 
       console.log(req.files)
       var file = req.files.file,
-          name = file.name,
+          filename = file.name,
           type = file.mimetype;
 
-      var uploadpath =  'uploads/' + name;
+      var uploadpath =  'uploads/' + filename;
       file.mv(uploadpath,function(err){
         if(err){
-          console.log("File Upload Failed",name,err);
+          console.log("File Upload Failed",filename,err);
         }
         else {
-          console.log("File Uploaded",name);
+          console.log("File Uploaded",filename);
         }
       });
       const options = {
-        args: [name]
+        args: [filename]
       }
 
 
-      let test = PythonShell.run('sbmlParser.py', options, function (err, data) {
+      PythonShell.run('sbmlParser.py', options, function (err, data) {
         if (err) {
-          console.log("if error")
           console.error(err)
+          res.status(500).send('Something went wrong in the python script.')
         } else {
-          console.log("No error")
-          console.log("nodejs :" + data)
+          fs.unlinkSync('./uploads/' + filename)
+          res.status(200).json(data)
         }
-        res.json(data);
       })
 
     }
