@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+
+
+  server:
+    build: server/
+    command: yarn start
+    ports:
+      - 5000:5000
+
+  client:
+    build: client/
+    command: yarn start
+    ports:
+      - 3000:3000
