@@ -9,8 +9,18 @@ model = cobra.io.read_sbml_model(path)
 reactionData = []
 r = 0
 for r in range(len(model.reactions)):
-    reactionData.append({'id':model.reactions[r].id,'equation':model.reactions[r].reaction,'reversibility':model.reactions[r].reversibility})
-
+    reactantsList = []
+    productsList = []
+    for rL in range(len(model.reactions[r].reactants)):
+        reactantsList.append(model.reactions[r].reactants[rL].id)
+    for pL in range(len(model.reactions[r].products)):
+        productsList.append(model.reactions[r].products[pL].id)
+    reactionData.append({'id':model.reactions[r].id,
+                        'name': model.reactions[r].name,
+                        'equation':model.reactions[r].reaction,
+                        'reversible':model.reactions[r].reversibility,
+                        'reactants': reactantsList,
+                        'products': productsList})
 
 metabolitesData = []
 m = 0
@@ -24,15 +34,14 @@ for g in range(len(model.genes)):
 
 
 data = {
-    "model":{
         "name": model.name,
         "noOfMetabolites": len(model.metabolites),
-        "listOfMetabolites": metabolitesData,
+        "metabolites": metabolitesData,
         "noOfReactions": len(model.reactions),
-        "listOfReactions": reactionData,
+        "reactions": reactionData,
         "noOfGenes": len(model.genes),
-        "listOfGenes": genesData
-    }
+        "genes": genesData
+
 }
 
 print(json.dumps(data))

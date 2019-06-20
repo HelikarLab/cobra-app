@@ -1,8 +1,6 @@
 /* Database Config file (Defines the connection with the database) */
-const Sequelize = require('sequelize')
-require('dotenv').config()
-
-/*
+const Sequelize = require('sequelize');
+require('dotenv').config();
 
 module.exports = new Sequelize(
   process.env.DB_NAME,
@@ -13,5 +11,4 @@ module.exports = new Sequelize(
     host: process.env.DB_HOST || 'localhost',
     pool: { max: 5, min: 0, acquire: 30000, idle: 10000 },
   }
-)
-*/
+);

@@ -2,22 +2,12 @@ const Sequelize = require('sequelize')
 const db = require('../config/database')
 
 module.exports = db.define(
-  'metabolite',
+  'sbmlFile',
   {
-    name: {
-      type: Sequelize.STRING,
+    fileBytes: {
+      type: Sequelize.BLOB,
       allowNull: false,
-      field: 'name',
-    },
-    sbmlId: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      field: 'sbml_id',
-    },
-    formula: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      field: 'formula',
+      field: 'file_bytes',
     },
     modelId: {
       type: Sequelize.BIGINT,
@@ -30,6 +20,6 @@ module.exports = db.define(
     },
   },
   {
-    tableName: 'metabolites',
+    tableName: 'sbml_files',
   }
 )

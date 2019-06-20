@@ -1,42 +1,41 @@
-
 import React from 'react'
-import { connect } from 'react-redux'
-import { Table } from 'reactstrap'
+import {Table, UncontrolledTooltip} from 'reactstrap'
+import {Icon} from "react-icons-kit";
+import MetaboliteLegend from "./MetaboliteLegend";
+import { infoCircle } from 'react-icons-kit/fa/infoCircle';
 
-class MetabolitesList extends React.Component {
-    constructor (props) {
-        super(props)
-        this.state = {
-            listOfMetabolites: []
-        }
-    }
+function MetabolitesList(props) {
 
-    componentDidUpdate (prevProps) {
-        if (prevProps.listOfMetabolites !== this.props.listOfMetabolites) {
-            this.setState({ listOfMetabolites: this.props.listOfMetabolites})
-        }
-    }
-    render () {
-        const { listOfMetabolites } = this.state
-        const tableData = listOfMetabolites.map(metabolite => {
+    if (props.metabolites) {
+        const tableData = props.metabolites.map(metabolite => {
             return (
-                <tr key={metabolite.id}>
-                    <th scope='row'>{metabolite.id}</th>
+                <tr  tag="button"
+                     action
+                     onClick={() => {
+                         props.setInfo(metabolite)
+                         props.setType('metabolite')
+                     }}
+                    data-div_id={metabolite.id}
+                    key={metabolite.id} >
+                    <td scope='row'>{metabolite.id}</td>
                     <td>{metabolite.name}</td>
-                    <td>{metabolite.formula}</td>
                 </tr>)
-        })
+        });
         return (
-            <div>
-                <h3 style={{ marginTop: 20 }}>Metabolites</h3>
+            <div style={{borderBottom: "1px solid #adadad"}}>
+                <h3 style={{ marginTop: 20 }}>Metabolites &nbsp;
+                    <Icon icon={infoCircle} id="metabolite-legend-info" />
+                    <UncontrolledTooltip placement="right" target="metabolite-legend-info">
+                        <MetaboliteLegend />
+                    </UncontrolledTooltip>
+                </h3>
                 <hr/>
-                <div style={{ height: '200px', overflowY: 'scroll', width: '650px' }}>
+                <div style={{ height: '550px', overflowY: 'scroll', borderRight: "1px solid #adadad" , borderLeft: "1px solid #adadad"}}>
                     <Table borderless>
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th >Id</th>
                             <th>Name</th>
-                            <th>Formula</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -46,13 +45,10 @@ class MetabolitesList extends React.Component {
                 </div>
             </div>
         )
+    } else {
+        return <div> </div>
     }
 }
 
-function mapStateToProps (state) {
-    return {
-        listOfMetabolites: state.data.model.listOfMetabolites
-    }
-}
 
-export default connect(mapStateToProps, {})(MetabolitesList)
+export default MetabolitesList

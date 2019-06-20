@@ -1,57 +1,55 @@
-
 import React from 'react'
-import { connect } from 'react-redux'
-import { Table } from 'reactstrap'
+import { Table, UncontrolledTooltip} from 'reactstrap'
+import {Icon} from "react-icons-kit";
+import ReactionLegend from "./ReactionLegend";
+import { infoCircle } from 'react-icons-kit/fa/infoCircle';
 
-class ReactionsList extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      reactions: []
-    }
-  }
+function ReactionsList(props) {
 
-  componentDidUpdate (prevProps) {
-    if (prevProps.reactions !== this.props.reactions) {
-      this.setState({ reactions: this.props.reactions })
+    if (props.reactions) {
+        const tableData = props.reactions.map(reaction => {
+            return (
+                <tr tag="button"
+                   action
+                   onClick={() => {
+                       props.setInfo(reaction)
+                       props.setType('reaction')
+                   }}
+                    data-div_id={reaction.id}
+                    key={reaction.id} >
+
+                    <td style={{width: "35%"}} scope='row'>{reaction.id}</td>
+                    <td style={{width: "65%"}}>{reaction.equation}</td>
+                </tr>)
+        });
+        return (
+            <div style={{borderBottom: "1px solid #adadad"}}>
+                <h3 style={{ marginTop: 20 }}>Reactions &nbsp;
+                <Icon icon={infoCircle} id="reaction-legend-info" />
+                    <UncontrolledTooltip placement="right" target="reaction-legend-info">
+                        <ReactionLegend />
+                    </UncontrolledTooltip>
+                </h3>
+                <hr/>
+                <div style={{ height: '550px', overflowY: 'scroll', borderRight: "1px solid #adadad" ,borderLeft: "1px solid #adadad" }}>
+                    <Table borderless>
+                        <thead>
+                        <tr >
+                            <th style={{width: "35%"}}>Id</th>
+                            <th style={{width: "35%"}}>Equation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {tableData}
+                        </tbody>
+                    </Table>
+                </div>
+            </div>
+        )
+    } else {
+        return <div> </div>
     }
-  }
-  render () {
-    const { reactions } = this.state
-    const tableData = reactions.map(reaction => {
-      return (<tr key={reaction.id}>
-        <th scope='row'>{reaction.id}</th>
-        <td>{reaction.equation}</td>
-        <td>{String(reaction.reversibility)}</td>
-      </tr>)
-    })
-    return (
-      <div>
-        <h3 style={{ marginTop: 20 }}>Reactions</h3>
-        <hr/>
-        <div style={{ height: '200px', overflowY: 'scroll', width: '650px' }}>
-          <Table borderless>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Reversible</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData}
-            </tbody>
-          </Table>
-        </div>
-      </div>
-    )
-  }
 }
 
-function mapStateToProps (state) {
-  return {
-    reactions: state.data.model.listOfReactions
-  }
-}
 
-export default connect(mapStateToProps, {})(ReactionsList)
+export default ReactionsList

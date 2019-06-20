@@ -1,40 +1,40 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Table } from 'reactstrap'
+import {Table, UncontrolledTooltip} from 'reactstrap'
+import {Icon} from "react-icons-kit";
+import GeneLegend from "./GeneLegend";
+import { infoCircle } from 'react-icons-kit/fa/infoCircle';
 
-class GenesList extends React.Component {
-    constructor (props) {
-        super(props)
-        this.state = {
-            listOfGenes: []
-        }
-    }
+function GenesList(props) {
 
-    componentDidUpdate (prevProps) {
-        if (prevProps.listOfGenes !== this.props.listOfGenes) {
-            this.setState({ listOfGenes: this.props.listOfGenes})
-        }
-    }
-    render () {
-        const { listOfGenes } = this.state
-        const tableData = listOfGenes.map(gene => {
+    if (props.genes) {
+        const tableData = props.genes.map(gene => {
             return (
-                <tr key={gene.id}>
+                <tr tag="button"
+                    action
+                    onClick={() => {
+                        props.setInfo(gene)
+                        props.setType('gene')
+                    }}
+                    data-div_id={gene.id}
+                    key={gene.id} >
                     <th scope='row'>{gene.id}</th>
-                    <td>{gene.name}</td>
                     <td>{String(gene.functional)}</td>
                 </tr>)
-        })
+        });
         return (
-            <div>
-                <h3 style={{ marginTop: 20 }}>Genes</h3>
+            <div style={{borderBottom: "1px solid #adadad"}}>
+                <h3 style={{ marginTop: 20 }}>Genes &nbsp;
+                    <Icon icon={infoCircle} id="gene-legend-info" />
+                    <UncontrolledTooltip placement="right" target="gene-legend-info">
+                        <GeneLegend />
+                    </UncontrolledTooltip>
+                </h3>
                 <hr/>
-                <div style={{ height: '200px', overflowY: 'scroll', width: '650px' }}>
+                <div style={{ height: '550px', overflowY: 'scroll',  borderRight: "1px solid #adadad" ,borderLeft: "1px solid #adadad"}}>
                     <Table borderless>
                         <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
+                            <th >Id</th>
                             <th>Functional</th>
                         </tr>
                         </thead>
@@ -45,13 +45,10 @@ class GenesList extends React.Component {
                 </div>
             </div>
         )
+    } else {
+        return <div> </div>
     }
 }
 
-function mapStateToProps (state) {
-    return {
-        listOfGenes: state.data.model.listOfGenes
-    }
-}
 
-export default connect(mapStateToProps, {})(GenesList)
+export default GenesList
