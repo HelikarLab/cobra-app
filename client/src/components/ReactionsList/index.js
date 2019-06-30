@@ -18,7 +18,7 @@ function ReactionsList(props) {
                     data-div_id={reaction.id}
                     key={reaction.id} >
 
-                    <td style={{width: "35%"}} scope='row'>{reaction.id}</td>
+                    <th style={{width: "35%"}} scope='row'>{reaction.id}</th>
                     <td style={{width: "65%"}}>{reaction.equation}</td>
                 </tr>)
         });

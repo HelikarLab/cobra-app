@@ -1,7 +1,7 @@
 import React from 'react'
-import { useStoreState, useStoreActions } from 'easy-peasy'
-import { Row, Col, Button, Modal, ModalHeader, ModalBody } from 'reactstrap'
-import Graph from '../Graph'
+import { useStoreState } from 'easy-peasy'
+import { Row, Col } from 'reactstrap'
+import Graph from '../ModelGraph'
 import ReactionsList from '../ReactionsList'
 import MetabolitesList from '../MetabolitesList'
 import InfoPanel from '../InfoPanel'
@@ -11,17 +11,17 @@ import ModelMetaData from "../ModelMetaData";
 function ModelTab() {
     const [type, setType] = React.useState('');
     const [info, setInfo] = React.useState({});
-    const [modal, setModal] = React.useState(false)
+    //const [modal, setModal] = React.useState(false)
 
     const { reactions, metabolites, genes,name } = useStoreState(
         state => state.currentModel
     );
 
-    const saveModel = useStoreActions(action => action.saveModel);
+    //const saveModel = useStoreActions(action => action.saveModel);
 
     return (
         <React.Fragment>
-            <Modal isOpen={modal} toggle={() => { setModal(!modal)}}>
+            {/*<Modal isOpen={modal} toggle={() => { setModal(!modal)}}>
 
                 <ModalHeader toggle={() => {setModal(!modal) }}>
                     Save your SBML Model
@@ -45,7 +45,7 @@ function ModelTab() {
                 </ModalBody>
 
 
-            </Modal>
+            </Modal>*/}
 
             <Row style={{ padding: 20 }}>
 

@@ -24,14 +24,25 @@ function InfoPanel(props) {
           <dt className="col-sm-4">Reaction ID</dt>
           <dd className="col-sm-8">{props.data.id}</dd>
 
-          <dt className="col-sm-4">Reaction Name</dt>
+          {
+            /*<dt className="col-sm-4">Reaction Name</dt>
           <dd className="col-sm-8">{props.data.name}</dd>
+          */}
 
           <dt className="col-sm-4">Reaction</dt>
           <dd className="col-sm-8">{props.data.equation}</dd>
 
           <dt className="col-sm-4">Reversible</dt>
           <dd className="col-sm-8">{String(props.data.reversible)}</dd>
+
+
+          <dt className="col-sm-4">Lower Bound</dt>
+          <dd className="col-sm-8">{String(props.data.lower_bound)}</dd>
+
+
+          <dt className="col-sm-4">Upper Bound</dt>
+          <dd className="col-sm-8">{String(props.data.upper_bound)}</dd>
+
 
         </dl>
       </div>

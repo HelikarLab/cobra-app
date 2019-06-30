@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 // const db = require('./config/database');
 // require('dotenv').config();
 
@@ -11,9 +12,16 @@ const app = express();
 // CORS
 app.use(cors());
 
-// API Route Imports
-const uploadSbmlApi = require('./routes/uploadSbml');
-const modelApi = require('./routes/model');
+// JSON Payload Parsers
+app.use(express.json());
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json({ type: 'application/*+json' }));
+
+// parse some custom thing into a Buffer
+app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
+
+// parse an HTML body into a string
+app.use(bodyParser.text({ type: 'text/html' }));
 
 // Sanitize Data
 app.use(helmet());
@@ -21,8 +29,13 @@ app.use(helmet());
 // Custom Request Logging
 app.use(morgan('tiny'));
 
-// JSON Payload Parsers
-app.use(express.json());
+
+// API Route Imports
+const uploadSbmlApi = require('./routes/uploadSbml');
+const modelApi = require('./routes/model');
+const analysisApi = require("./routes/analysisModel");
+
+
 /*
 
 // Establishing and testing database connection
@@ -49,6 +62,7 @@ connectDb()
 // APIs
 app.use('/api/uploadSbml', uploadSbmlApi);
 app.use('/api/model', modelApi);
+app.use('/api/model/id/optimize',analysisApi);
 
 // Error Handling
 app.use((err, req, res, next) => {

@@ -4,8 +4,8 @@ const uploadSbmlController = require('../controllers/uploadSbml')
 const router = express.Router()
 
 // Formidable middleware for uploading files
-router.use(formidableMiddleware({ uploadDir: './' }))
+router.use(formidableMiddleware({ uploadDir: './' }));
 
-router.post('/', uploadSbmlController)
+router.post('/', uploadSbmlController);
 
-module.exports = router
+module.exports = router;

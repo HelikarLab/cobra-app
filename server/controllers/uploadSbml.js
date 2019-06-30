@@ -12,7 +12,7 @@ module.exports = async function(req, res) {
 
   const options = {
     args: [file.name],
-  }
+  };
 
   PythonShell.run('sbmlParser.py', options, function(err, data) {
     if (err) {
@@ -23,4 +23,4 @@ module.exports = async function(req, res) {
       res.status(200).send(data)
     }
   })
-}
+};

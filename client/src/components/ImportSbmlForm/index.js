@@ -4,7 +4,8 @@ import { useStoreActions } from 'easy-peasy'
 import { Button, Form, FormText, FormGroup } from 'reactstrap'
 
 function ImportSbmlForm({ closeModal }) {
-  const importSbml = useStoreActions(action => action.importSbml)
+
+  const importSbml = useStoreActions(action => action.importSbml);
 
   return (
     <React.Fragment>

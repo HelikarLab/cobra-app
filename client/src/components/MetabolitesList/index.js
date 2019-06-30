@@ -17,7 +17,7 @@ function MetabolitesList(props) {
                      }}
                     data-div_id={metabolite.id}
                     key={metabolite.id} >
-                    <td scope='row'>{metabolite.id}</td>
+                    <th scope='row'>{metabolite.id}</th>
                     <td>{metabolite.name}</td>
                 </tr>)
         });

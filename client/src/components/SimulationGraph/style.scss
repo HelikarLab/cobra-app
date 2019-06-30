@@ -1,0 +1,32 @@
+.graph-canvas {
+  -webkit-box-shadow: 2px 2px 16px -7px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 2px 2px 16px -7px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 16px -7px rgba(0, 0, 0, 0.4);
+}
+
+.flex {
+  display: flex;
+}
+
+.circle-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50px;
+  margin-right: 10px;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.yellow {
+  background-color: yellow;
+}
