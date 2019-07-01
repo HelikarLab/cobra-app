@@ -9,8 +9,7 @@ function GenesList(props) {
     if (props.genes) {
         const tableData = props.genes.map(gene => {
             return (
-                <tr tag="button"
-                    action
+                <tr
                     onClick={() => {
                         props.setInfo(gene)
                         props.setType('gene')

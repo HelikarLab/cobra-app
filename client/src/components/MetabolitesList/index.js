@@ -9,9 +9,8 @@ function MetabolitesList(props) {
     if (props.metabolites) {
         const tableData = props.metabolites.map(metabolite => {
             return (
-                <tr  tag="button"
-                     action
-                     onClick={() => {
+                <tr
+                    onClick={() => {
                          props.setInfo(metabolite)
                          props.setType('metabolite')
                      }}

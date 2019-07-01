@@ -10,7 +10,7 @@ class GeneControl extends React.Component{
 
         this.state = {
             checkedItems: new Map(),
-            genes: null
+            genes: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,6 +28,15 @@ class GeneControl extends React.Component{
             genes: array
         });
     };
+
+    componentDidMount(prevProps,prevState) {
+
+        if(this.props.genes){
+            this.setState({
+                genes: this.props.genes
+            });
+        }
+    }
 
     componentDidUpdate(prevProps) {
         if(prevProps.genes !== this.props.genes){

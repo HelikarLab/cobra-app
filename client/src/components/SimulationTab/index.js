@@ -4,16 +4,12 @@ import {useStoreState, useStoreActions} from "easy-peasy";
 import FluxControl from "../FluxControl";
 import GeneControl from "../GeneControl";
 import SimulationGraph from "../SimulationGraph";
-import Graph from "../ModelGraph";
-
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardTitle, CardText} from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 
 
 function SimulationTab() {
 
-    const [ setType] = React.useState('');
-    const [setInfo] = React.useState({});
     const [activeTab, toggle] = React.useState( 1);
 
     const { reactions, metabolites, genes } = useStoreState(
@@ -77,8 +73,6 @@ function SimulationTab() {
 
                                         <FluxControl
                                             reactions={reactions}
-                                            setInfo={setInfo}
-                                            setType={setType}
                                         />
                                     </Col>
 
@@ -93,9 +87,7 @@ function SimulationTab() {
                                     <Col md="8">
 
                                         <GeneControl
-                                            genes={genes}
-                                            setInfo={setInfo}
-                                            setType={setType}/>
+                                            genes={genes}/>
                                     </Col>
 
                                 </Row>

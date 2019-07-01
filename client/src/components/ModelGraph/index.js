@@ -14,7 +14,7 @@ class Graph extends React.Component {
       nodes: [],
       edges: [],
       compartments: [],
-      currentCompartment : null,
+      currentCompartment: null,
       dropdownOpen: false
     };
     this.toggle = this.toggle.bind(this);
@@ -26,15 +26,16 @@ class Graph extends React.Component {
       dropdownOpen: !prevState.dropdownOpen
     }));
   }
-   removeDuplicates = (originalArray, prop) => {
+
+  removeDuplicates = (originalArray, prop) => {
     let newArray = [];
-    let lookupObject  = {};
+    let lookupObject = {};
     let i;
-    for( i in originalArray) {
+    for (i in originalArray) {
       lookupObject[originalArray[i][prop]] = originalArray[i];
     }
 
-    for(i in lookupObject) {
+    for (i in lookupObject) {
       newArray.push(lookupObject[i][prop]);
     }
     this.setState({
@@ -69,14 +70,14 @@ class Graph extends React.Component {
       reaction.reactants.map(reactant => {
         if (reaction.reversible) {
           return reactionsEdges.push({
-            source: nodes[this.findNode({ label: reactant }, nodes)],
-            target: nodes[this.findNode({ label: reaction.id }, nodes)],
+            source: nodes[this.findNode({label: reactant}, nodes)],
+            target: nodes[this.findNode({label: reaction.id}, nodes)],
             style: 'reversibleReactantEdge',
           })
         } else {
           return reactionsEdges.push({
-            source: nodes[this.findNode({ label: reactant }, nodes)],
-            target: nodes[this.findNode({ label: reaction.id }, nodes)],
+            source: nodes[this.findNode({label: reactant}, nodes)],
+            target: nodes[this.findNode({label: reaction.id}, nodes)],
             style: 'reactantEdge',
           })
         }
@@ -84,14 +85,14 @@ class Graph extends React.Component {
       return reaction.products.map(product => {
         if (reaction.reversible) {
           return reactionsEdges.push({
-            source: nodes[this.findNode({ label: reaction.id }, nodes)],
-            target: nodes[this.findNode({ label: product }, nodes)],
+            source: nodes[this.findNode({label: reaction.id}, nodes)],
+            target: nodes[this.findNode({label: product}, nodes)],
             style: 'reversibleProductEdge',
           })
         } else {
           return reactionsEdges.push({
-            source: nodes[this.findNode({ label: reaction.id }, nodes)],
-            target: nodes[this.findNode({ label: product }, nodes)],
+            source: nodes[this.findNode({label: reaction.id}, nodes)],
+            target: nodes[this.findNode({label: product}, nodes)],
             style: 'productEdge',
           })
         }
@@ -100,7 +101,9 @@ class Graph extends React.Component {
     return reactionsEdges
   };
 
-  componentDidMount(prevState) {
+  componentDidMount(prevState, prevProps) {
+
+
 
     this.self = new NetViz(this.refs.graph, {
       styles: {
@@ -152,15 +155,47 @@ class Graph extends React.Component {
       },
       onDblClick: function() {},
       passiveEvts: true,
-    })
+    });
+
+    if(this.props.reactions && this.props.metabolites) {
+
+      let sorted = this.props.reactions
+          .sort((a, b) => a.compartments.localeCompare(b.compartments));
+      this.removeDuplicates(sorted, "compartments");
+
+      const {metabolites} = this.props;
+
+      let reactionNodes = this.generateReactionNodes(this.props.reactions)
+      let nodes = [];
+      for (let i = 0; i < metabolites.length; i++) {
+        nodes.push({label: metabolites[i].id})
+      }
+      reactionNodes.map(node => {
+        return nodes.push(node)
+      });
+      let edges = this.generateReactionEdges(this.props.reactions, nodes);
+      this.setState({nodes, edges});
+
+
+      this.setState({nodes: nodes,edges: edges},function generateGraph() {
+          const nodes = this.state.nodes;
+          const edges = this.state.edges;
+          this.self.set(nodes, edges, 'force');
+          this.self.draw()
+
+      });
+    }
+
   }
 
   componentDidUpdate(prevProps, prevState) {
+
 
     if (prevProps.reactions !== this.props.reactions ||
         prevProps.metabolites !== this.props.metabolites ||
         prevState.currentCompartment !== this.state.currentCompartment)
     {
+
 
       let sorted = this.props.reactions
           .sort((a, b) => a.compartments.localeCompare(b.compartments));
@@ -264,6 +299,7 @@ class Graph extends React.Component {
                   this.state && this.state.compartments && this.state.compartments.map((compartment,index)=>{
                     return(
                         <DropdownItem
+                            key={index}
                             onClick={
                               this.selectCompartment(compartment)
                             }

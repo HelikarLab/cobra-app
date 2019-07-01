@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, NavbarBrand, Nav, NavItem, Button } from 'reactstrap'
+import { Navbar, NavbarBrand, Button } from 'reactstrap'
 import { BrowserRouter as Router, Route, NavLink } from "react-router-dom"
 import ModelTab from "../ModelTab";
 import SimulationTab from "../SimulationTab";

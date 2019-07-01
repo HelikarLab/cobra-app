@@ -290,6 +290,35 @@ class Graph extends React.Component {
             onDblClick: function() {},
             passiveEvts: true,
         })
+
+        if(this.props.reactions && this.props.metabolites) {
+
+            let sorted = this.props.reactions
+                .sort((a, b) => a.compartments.localeCompare(b.compartments));
+            this.removeDuplicates(sorted, "compartments");
+
+            const {metabolites} = this.props;
+
+            let reactionNodes = this.generateReactionNodes(this.props.reactions)
+            let nodes = [];
+            for (let i = 0; i < metabolites.length; i++) {
+                nodes.push({label: metabolites[i].id})
+            }
+            reactionNodes.map(node => {
+                return nodes.push(node)
+            });
+            let edges = this.generateReactionEdges(this.props.reactions, nodes);
+            this.setState({nodes, edges});
+
+
+            this.setState({nodes: nodes,edges: edges},function generateGraph() {
+                const nodes = this.state.nodes;
+                const edges = this.state.edges;
+                this.self.set(nodes, edges, 'force');
+                this.self.draw()
+
+            });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -360,13 +389,13 @@ class Graph extends React.Component {
                 let edgeStyle = [];
                 filteredReactions.map((reaction,index)=>{
                     if(reaction.reversible === true){
-                        edgeStyle = edgeStyle.concat({
+                        return edgeStyle = edgeStyle.concat({
                             index: index,
                             width : (reaction.upper_bound - reaction.lower)/200
                         })
                     }
                     else{
-                        edgeStyle = edgeStyle.concat({
+                        return edgeStyle = edgeStyle.concat({
                             index: index,
                             width : (reaction.upper_bound - reaction.lower)/100
                         })
@@ -418,6 +447,7 @@ class Graph extends React.Component {
                                     this.state && this.state.compartments && this.state.compartments.map((compartment,index)=>{
                                         return(
                                             <DropdownItem
+                                                key={index}
                                                 onClick={
                                                     this.selectCompartment(compartment)
                                                 }

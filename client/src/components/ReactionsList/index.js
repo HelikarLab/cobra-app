@@ -9,8 +9,7 @@ function ReactionsList(props) {
     if (props.reactions) {
         const tableData = props.reactions.map(reaction => {
             return (
-                <tr tag="button"
-                   action
+                <tr
                    onClick={() => {
                        props.setInfo(reaction)
                        props.setType('reaction')

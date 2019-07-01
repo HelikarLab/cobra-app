@@ -1,9 +1,7 @@
 import React from 'react'
-import {Button, Col, Table} from 'reactstrap'
+import {Button,  Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
-import NumericInput from 'react-numeric-input'
-
 
 class FluxControl extends React.Component{
 
@@ -27,12 +25,24 @@ class FluxControl extends React.Component{
         });
     };
 
-    componentDidUpdate(prevProps) {
+    componentDidMount(prevProps,prevState) {
+
+        if(this.props.reactions){
+            this.setState({
+                values: this.props.reactions
+            });
+        }
+    }
+
+    componentDidUpdate(prevProps,prevState) {
+
+
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
                 values: this.props.reactions
             });
         }
+
     }
 
     render() {
@@ -46,7 +56,7 @@ class FluxControl extends React.Component{
                         key={reaction.id}>
 
                         <td style={{width: "15%"}} >{reaction.id}</td>
-                        <td style={{width: "85%"}} scope="row">
+                        <td style={{width: "85%"}} >
 
                             <InputRange
                                 minValue={this.state.values[index].min}
