@@ -43,9 +43,35 @@ class Graph extends React.Component {
     };
     generateReactionNodes = reactions => {
         const reactionNodes = reactions.map(reaction => {
-            return {
-                label: reaction.id,
-                style: 'reactionNode',
+            if(reaction.flux<5) {
+                return {
+                    label: reaction.id,
+                    style: 'reactionNodeNarrow',
+                }
+            }
+            else if(reaction.flux<10) {
+                return {
+                    label: reaction.id,
+                    style: 'reactionNodeThin',
+                }
+            }
+            else if(reaction.flux<20) {
+                return {
+                    label: reaction.id,
+                    style: 'reactionNodeMedium',
+                }
+            }
+            else if(reaction.flux<30) {
+                return {
+                    label: reaction.id,
+                    style: 'reactionNodeWide',
+                }
+            }
+            else {
+                return {
+                    label: reaction.id,
+                    style: 'reactionNodeThick',
+                }
             }
         });
         return reactionNodes
