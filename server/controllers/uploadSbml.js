@@ -8,10 +8,11 @@ module.exports = async function(req, res) {
     fs.mkdirSync('./uploads')
   }
 
-  fs.renameSync(file.path, `./uploads/${file.name}`)
+  const fileName = 'sbmlFile';
+  fs.renameSync(file.path, `./uploads/${fileName}`);
 
   const options = {
-    args: [file.name],
+    args: [fileName],
   };
 
   PythonShell.run('sbmlParser.py', options, function(err, data) {
@@ -19,7 +20,7 @@ module.exports = async function(req, res) {
       console.error(err)
       res.status(500).send('Something went wrong.')
     } else {
-      fs.unlinkSync('./uploads/' + file.name)
+      //fs.unlinkSync('./uploads/' + file.name)
       res.status(200).send(data)
     }
   })

@@ -3,27 +3,34 @@ const fs = require('fs');
 
 module.exports = async function (req, res) {
 
-    console.log(Object.values(req.fields)[0]);
+    //console.log(Object.values(req.fields)[0]);
 
     // fs.renameSync("analysisModel", `./uploads/${file.name}`)
-    fs.writeFile ("./analysis/analysisModel.json", Object.values(req.fields)[0], function(err) {
-        if (err) throw err;
-        console.log('complete');
-        }
-    );
 
-    const options = {
-        args: [Object.values(req.fields)[0]]
-    };
+    try {
+
+        fs.writeFile("./analysis/analysisModel.json", Object.values(req.fields)[0], function (err) {
+                if (err) throw err;
+                console.log('complete');
+            }
+        );
+
+        const options = {
+            args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
+        };
 
 
-    PythonShell.run('modelAnalysis.py', options, function (err, data) {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Something went wrong!')
-        } else {
-            res.status(200).json(data)
-        }
-
-    })
+        PythonShell.run('modelAnalysis.py', options, function (err, data) {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Something went wrong!')
+            } else {
+                res.status(200).json(data)
+            }
+        })
+    }
+    catch (err) {
+        console.log(err);
+        res.status(404).send('Fatal Error');
+    }
 };

@@ -43,6 +43,7 @@ const model = {
   }),
   generateAnalysisModel : thunk((actions, payload, {getStoreState})=>{
       const formData = new FormData();
+      const state = getStoreState();
       formData.append('model', JSON.stringify(payload));
     axios({
       method: 'post',
@@ -50,7 +51,9 @@ const model = {
       data : formData
     })
         .then(res=> {
-          console.log(res.data[0])
+          const json = JSON.parse(res.data);
+          actions.setCurrentAnalysisModel(json);
+          console.log(res.data)
         })
         .catch(err=>console.log(err))
   }),

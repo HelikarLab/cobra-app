@@ -68,28 +68,28 @@ class Graph extends React.Component {
         reactions.map(reaction => {
             reaction.reactants.map(reactant => {
                 if (reaction.reversible) {
-                    if(reaction.reactants.length===1) {
+                    if(reaction.flux<5) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reactant}, nodes)],
                             target: nodes[this.findNode({label: reaction.id}, nodes)],
                             style: 'reversibleReactantEdgeThin',
                         })
                     }
-                    else if(reaction.reactants.length===2) {
+                    else if(reaction.flux<10) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reactant}, nodes)],
                             target: nodes[this.findNode({label: reaction.id}, nodes)],
                             style: 'reversibleReactantEdgeNarrow',
                         })
                     }
-                    else if(reaction.reactants.length===3) {
+                    else if(reaction.flux<20) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reactant}, nodes)],
                             target: nodes[this.findNode({label: reaction.id}, nodes)],
                             style: 'reversibleReactantEdgeMedium',
                         })
                     }
-                    else if(reaction.reactants.length===4) {
+                    else if(reaction.flux<30) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reactant}, nodes)],
                             target: nodes[this.findNode({label: reaction.id}, nodes)],
@@ -105,28 +105,28 @@ class Graph extends React.Component {
                     }
                 }
                 else {
-                    if(reaction.reactants.length===1){
+                    if(reaction.flux<5){
                         return reactionsEdges.push({
                             source: nodes[this.findNode({ label: reactant }, nodes)],
                             target: nodes[this.findNode({ label: reaction.id }, nodes)],
                             style: 'reactantEdgeThin',
                         })
                     }
-                    else if(reaction.reactants.length===2){
+                    else if(reaction.flux<10){
                         return reactionsEdges.push({
                             source: nodes[this.findNode({ label: reactant }, nodes)],
                             target: nodes[this.findNode({ label: reaction.id }, nodes)],
                             style: 'reactantEdgeNarrow',
                         })
                     }
-                    else if(reaction.reactants.length===3){
+                    else if(reaction.flux<20){
                         return reactionsEdges.push({
                             source: nodes[this.findNode({ label: reactant }, nodes)],
                             target: nodes[this.findNode({ label: reaction.id }, nodes)],
                             style: 'reactantEdgeMedium',
                         })
                     }
-                    else if(reaction.reactants.length===4){
+                    else if(reaction.flux<30){
                         return reactionsEdges.push({
                             source: nodes[this.findNode({ label: reactant }, nodes)],
                             target: nodes[this.findNode({ label: reaction.id }, nodes)],
@@ -145,28 +145,28 @@ class Graph extends React.Component {
             });
             return reaction.products.map(product => {
                 if (reaction.reversible) {
-                    if(reaction.products.length===1) {
+                    if(reaction.flux<5) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'reversibleProductEdgeThin',
                         })
                     }
-                    else if(reaction.products.length===2) {
+                    else if(reaction.flux<10) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'reversibleProductEdgeNarrow',
                         })
                     }
-                    else if(reaction.products.length===3) {
+                    else if(reaction.flux<20) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'reversibleProductEdgeMedium',
                         })
                     }
-                    else if(reaction.products.length===4) {
+                    else if(reaction.flux<30) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
@@ -182,28 +182,28 @@ class Graph extends React.Component {
                     }
                 }
                 else {
-                    if(reaction.products.length===1) {
+                    if(reaction.flux<5) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'productEdgeThin',
                         })
                     }
-                    else if(reaction.products.length===2) {
+                    else if(reaction.flux<10) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'productEdgeNarrow',
                         })
                     }
-                    else if(reaction.products.length===3) {
+                    else if(reaction.flux<20) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
                             style: 'productEdgeMedium',
                         })
                     }
-                    else if(reaction.products.length===4) {
+                    else if(reaction.flux<30) {
                         return reactionsEdges.push({
                             source: nodes[this.findNode({label: reaction.id}, nodes)],
                             target: nodes[this.findNode({label: product}, nodes)],
@@ -252,7 +252,13 @@ class Graph extends React.Component {
                     },
                     type: 'line',
                 },
-                reactionNode: {color: 'rgb(200, 0, 0)',},
+                reactionNode :{color: 'rgb(200,0,0)'},
+
+                reactionNodeThin: {color: 'rgb(200, 0, 0)', minSize: 5, maxSize: 8},
+                reactionNodeNarrow: {color: 'rgb(200, 0, 0)', minSize: 10, maxSize: 13},
+                reactionNodeMedium: {color: 'rgb(200, 0, 0)', minSize: 15, maxSize: 18},
+                reactionNodeWide: {color: 'rgb(200, 0, 0)', minSize: 20, maxSize: 23},
+                reactionNodeThick: {color: 'rgb(200, 0, 0)', minSize: 25},
 
                 reactantEdgeThin: {color: 'rgb(89, 249, 2)',width: 1},
                 reactantEdgeNarrow: {color: 'rgb(89, 249, 2)',width: 2},
@@ -323,10 +329,16 @@ class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (prevProps.reactions !== this.props.reactions ||
+        console.log("updating");
+
+        console.log(this.props);
+
+        if ((prevProps.reactions !== this.props.reactions ||
             prevProps.metabolites !== this.props.metabolites ||
-            prevState.currentCompartment !== this.state.currentCompartment)
+            prevState.currentCompartment !== this.state.currentCompartment) && this.props.reactions && this.props.metabolites)
         {
+
+            console.log(this.props);
 
             let sorted = this.props.reactions
                 .sort((a, b) => a.compartments.localeCompare(b.compartments));
@@ -336,6 +348,8 @@ class Graph extends React.Component {
             if (this.state.currentCompartment === "'All'" || this.state.currentCompartment === null) {
 
                 const {metabolites} = this.props;
+
+
 
 
                 let reactionNodes = this.generateReactionNodes(this.props.reactions);
@@ -406,6 +420,7 @@ class Graph extends React.Component {
 
                 this.setState({nodes: nodes,edges: edges},function generateGraph() {
                     if (prevState !== this.state) {
+                        console.log("generating");
 
                         const nodes = this.state.nodes;
                         const edges = this.state.edges;

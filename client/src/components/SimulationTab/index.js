@@ -6,24 +6,36 @@ import GeneControl from "../GeneControl";
 import SimulationGraph from "../SimulationGraph";
 import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
+import AnalysisInfo from "../AnalysisInfo";
 
 
 function SimulationTab() {
 
     const [activeTab, toggle] = React.useState( 1);
 
-    const { reactions, metabolites, genes } = useStoreState(
+/*    const { reactions, metabolites, genes } = useStoreState(
         state => state.currentModel
-    );
+    );*/
+
+    const currentMetabolites = useStoreState( state => state.currentModel.metabolites);
+    const currentReactions = useStoreState( state => state.currentModel.reactions);
+    const currentGenes= useStoreState( state => state.currentModel.genes);
 
     const generateAnalysisModel = useStoreActions( action => action.generateAnalysisModel);
+
+
+    const analysisMetabolites = useStoreState(state => state.currentAnalysisModel.metabolites);
+    const analysisReactions = useStoreState(state => state.currentAnalysisModel.reactions);
+    const name = useStoreState(state => state.currentAnalysisModel.name);
+    const info = useStoreState(state=> state.currentAnalysisModel.objective_value);
+    const analysisGenes = useStoreState(state=> state.currentAnalysisModel.genes);
 
     function handleClick(e) {
 
         generateAnalysisModel({
-                metabolites: metabolites.slice(0,5),
-                genes: genes.slice(0,5),
-                reactions: reactions.slice(0,5)
+                metabolites: currentMetabolites,
+                reactions: currentReactions,
+                genes: currentGenes
             })
     }
 
@@ -72,7 +84,7 @@ function SimulationTab() {
                                     <Col md="8">
 
                                         <FluxControl
-                                            reactions={reactions}
+                                            reactions={currentReactions}
                                         />
                                     </Col>
 
@@ -82,12 +94,14 @@ function SimulationTab() {
 
                                     <Col md="4">
 
+                                        <AnalysisInfo name={name} info={info}/>
+
                                     </Col>
 
                                     <Col md="8">
 
                                         <GeneControl
-                                            genes={genes}/>
+                                            genes={currentGenes}/>
                                     </Col>
 
                                 </Row>
@@ -96,7 +110,7 @@ function SimulationTab() {
 
                             <Col md="5" >
 
-                                <SimulationGraph reactions={reactions} metabolites={metabolites} />
+                                <SimulationGraph metabolites={analysisMetabolites} reactions={analysisReactions}  />
 
                             </Col>
 
