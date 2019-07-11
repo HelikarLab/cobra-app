@@ -58,8 +58,6 @@ class FluxControl extends React.Component{
 
     componentDidUpdate(prevProps,prevState) {
 
-        console.log(prevProps);
-        console.log(prevState);
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
                 values: this.props.reactions,

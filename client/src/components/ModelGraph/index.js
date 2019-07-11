@@ -36,7 +36,9 @@ class Graph extends React.Component {
     }
 
     for (i in lookupObject) {
-      newArray.push(lookupObject[i][prop]);
+      if(lookupObject[i][prop].length<5) {
+        newArray.push(lookupObject[i][prop]);
+      }
     }
     this.setState({
       compartments: newArray
