@@ -13,29 +13,23 @@ function SimulationTab() {
 
     const [activeTab, toggle] = React.useState( 1);
 
-/*    const { reactions, metabolites, genes } = useStoreState(
-        state => state.currentModel
-    );*/
-
-    const currentMetabolites = useStoreState( state => state.currentModel.metabolites);
     const currentReactions = useStoreState( state => state.currentModel.reactions);
     const currentGenes= useStoreState( state => state.currentModel.genes);
+    const updatedGenes = useStoreState(state => state.updatedGenes);
+    const updatedReactions = useStoreState(state => state.updatedReactions);
 
     const generateAnalysisModel = useStoreActions( action => action.generateAnalysisModel);
-
 
     const analysisMetabolites = useStoreState(state => state.currentAnalysisModel.metabolites);
     const analysisReactions = useStoreState(state => state.currentAnalysisModel.reactions);
     const name = useStoreState(state => state.currentAnalysisModel.name);
     const info = useStoreState(state=> state.currentAnalysisModel.objective_value);
-    const analysisGenes = useStoreState(state=> state.currentAnalysisModel.genes);
 
     function handleClick(e) {
 
         generateAnalysisModel({
-                metabolites: currentMetabolites,
-                reactions: currentReactions,
-                genes: currentGenes
+                reactions: updatedReactions,
+                genes: updatedGenes
             })
     }
 
@@ -84,6 +78,7 @@ function SimulationTab() {
                                     <Col md="8">
 
                                         <FluxControl
+                                            updatedReactions={updatedReactions}
                                             reactions={currentReactions}
                                         />
                                     </Col>
@@ -101,6 +96,7 @@ function SimulationTab() {
                                     <Col md="8">
 
                                         <GeneControl
+                                            updatedGenes={updatedGenes}
                                             genes={currentGenes}/>
                                     </Col>
 

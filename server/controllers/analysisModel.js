@@ -3,12 +3,7 @@ const fs = require('fs');
 
 module.exports = async function (req, res) {
 
-    //console.log(Object.values(req.fields)[0]);
-
-    // fs.renameSync("analysisModel", `./uploads/${file.name}`)
-
     try {
-
         fs.writeFile("./analysis/analysisModel.json", Object.values(req.fields)[0], function (err) {
                 if (err) throw err;
                 console.log('complete');
@@ -18,7 +13,6 @@ module.exports = async function (req, res) {
         const options = {
             args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
         };
-
 
         PythonShell.run('modelAnalysis.py', options, function (err, data) {
             if (err) {

@@ -355,16 +355,10 @@ class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        console.log("updating");
-
-        console.log(this.props);
-
         if ((prevProps.reactions !== this.props.reactions ||
             prevProps.metabolites !== this.props.metabolites ||
             prevState.currentCompartment !== this.state.currentCompartment) && this.props.reactions && this.props.metabolites)
         {
-
-            console.log(this.props);
 
             let sorted = this.props.reactions
                 .sort((a, b) => a.compartments.localeCompare(b.compartments));
@@ -446,7 +440,6 @@ class Graph extends React.Component {
 
                 this.setState({nodes: nodes,edges: edges},function generateGraph() {
                     if (prevState !== this.state) {
-                        console.log("generating");
 
                         const nodes = this.state.nodes;
                         const edges = this.state.edges;
@@ -498,7 +491,7 @@ class Graph extends React.Component {
                                 }
                             </DropdownMenu>
                         </Dropdown>
-                        <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? 'All' : (this.state.currentCompartment)}</h5>
+                        <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
                     </div> : null
                     }
                 </h3>

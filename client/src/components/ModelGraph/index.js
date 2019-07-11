@@ -294,7 +294,7 @@ class Graph extends React.Component {
                     onClick={
                       this.selectCompartment("'All'")
                     }
-                > All </DropdownItem>
+                > 'All' </DropdownItem>
                 {
                   this.state && this.state.compartments && this.state.compartments.map((compartment,index)=>{
                     return(
@@ -309,7 +309,7 @@ class Graph extends React.Component {
                 }
               </DropdownMenu>
             </Dropdown>
-          <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? 'All' : (this.state.currentCompartment)}</h5>
+          <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
           </div> : null
           }
         </h3>

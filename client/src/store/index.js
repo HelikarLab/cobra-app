@@ -7,6 +7,8 @@ const model = {
   currentModel: {},
   currentModelFile: '',
   currentAnalysisModel : {},
+  updatedReactions : [],
+  updatedGenes : [],
 
   //thunks
   importSbml: thunk((actions, file) => {
@@ -43,17 +45,15 @@ const model = {
   }),
   generateAnalysisModel : thunk((actions, payload, {getStoreState})=>{
       const formData = new FormData();
-      const state = getStoreState();
       formData.append('model', JSON.stringify(payload));
-    axios({
-      method: 'post',
-      url: `${API_URL}/api/model/id/optimize`,
-      data : formData
-    })
+      axios({
+        method: 'post',
+        url: `${API_URL}/api/model/id/optimize`,
+        data : formData
+      })
         .then(res=> {
           const json = JSON.parse(res.data);
           actions.setCurrentAnalysisModel(json);
-          console.log(res.data)
         })
         .catch(err=>console.log(err))
   }),

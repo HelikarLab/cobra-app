@@ -10,23 +10,46 @@ class GeneControl extends React.Component{
 
         this.state = {
             checkedItems: new Map(),
-            genes: []
+            genes: [],
+            updatedGenes: []
         };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange = params => e => {
+    handleChange = (params,id) => e => {
+
         const item = e.target.name;
         const isChecked = e.target.checked;
         this.setState(
             prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked)}),
             );
         const array = this.state.genes;
-        array[params].functional = false;
+        array[params].functional = !e.target.checked;
         this.setState({
             genes: array
         });
+
+        const updated = this.state.updatedGenes;
+        let i;
+        let flag=0;
+        for(i=0;i<updated.length;i++){
+            if(id===updated[i].id){
+                updated[i].functional = !e.target.checked;
+                flag=1;
+            }
+        }
+        if(flag===0) {
+            updated.push({
+                "id": id,
+                "functional": !e.target.checked
+            });
+        }
+
+        this.setState({
+            updatedGenes : updated
+        });
+
     };
 
     componentDidMount(prevProps,prevState) {
@@ -41,7 +64,8 @@ class GeneControl extends React.Component{
     componentDidUpdate(prevProps) {
         if(prevProps.genes !== this.props.genes){
             this.setState({
-                genes: this.props.genes
+                genes: this.props.genes,
+                updatedGenes: this.props.updatedGenes
             })
         }
     }
@@ -58,7 +82,7 @@ class GeneControl extends React.Component{
                         <td style={{width: "50%"}}>
 
                             <label key={gene.id}>
-                                <CustomInput type="switch" id={gene.id} name={gene.id}  checked={this.state.checkedItems.get(gene.id)} onChange={this.handleChange(index)}/>
+                                <CustomInput type="switch" id={gene.id} name={gene.id}  checked={this.state.checkedItems.get(gene.id)} onChange={this.handleChange(index,gene.id)}/>
                             </label>
 
                         </td>

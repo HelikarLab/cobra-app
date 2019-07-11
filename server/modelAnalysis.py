@@ -2,22 +2,23 @@ import sys
 import cobra
 import json
 
-#print("1: "+ sys.argv[1]+"  2: " + sys.argv[2])
-
 path = './uploads/sbmlFile'
 initialModel = cobra.io.read_sbml_model(path)
 
 analysisModel = json.loads(sys.argv[2])
 
-for r in range(len(initialModel.reactions)):
-    initialModel.reactions[r].lower_bound = analysisModel['reactions'][r]['lower_bound']
-    initialModel.reactions[r].upper_bound = analysisModel['reactions'][r]['upper_bound']
+for initialReaction in range(len(initialModel.reactions)):
+    for updatedReaction in range(len(analysisModel['reactions'])):
+        if(initialModel.reactions[initialReaction].id==analysisModel['reactions'][updatedReaction]['id']):
+            initialModel.reactions[initialReaction].lower_bound = analysisModel['reactions'][updatedReaction]['lower_bound']
+            initialModel.reactions[initialReaction].upper_bound = analysisModel['reactions'][updatedReaction]['upper_bound']
 
-for g in range(len(initialModel.genes)):
-    initialModel.genes[g].functional = analysisModel['genes'][g]['functional']
+for initialGene in range(len(initialModel.genes)):
+    for updatedGene in range(len(analysisModel['genes'])):
+        if(initialModel.genes[initialGene].id==analysisModel['genes'][updatedGene]['id']):
+            initialModel.genes[initialGene].functional = analysisModel['genes'][updatedGene]['functional']
 
 solution = initialModel.optimize()
-
 
 reactionData = []
 r = 0
@@ -56,7 +57,6 @@ genesData = []
 g = 0
 for g in range(len(initialModel.genes)):
     genesData.append({'id':initialModel.genes[g].id, 'name' : initialModel.genes[g].name,'functional':initialModel.genes[g].functional})
-
 
 data = {
         "name": initialModel.name,

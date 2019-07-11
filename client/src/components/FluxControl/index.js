@@ -9,19 +9,41 @@ class FluxControl extends React.Component{
         super(props);
 
         this.state = {
-            values : null
+            values : null,
+            updatedReactions: []
         };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-
-    handleChange = param => event =>{
+    handleChange = (param,id) => event =>{
         const array = this.state.values;
         array[param].lower_bound = event.min;
         array[param].upper_bound = event.max;
         this.setState({
             values: array
+        });
+
+        const updated = this.state.updatedReactions;
+        let i;
+        let flag=0;
+        for(i=0;i<updated.length;i++){
+            if(id===updated[i].id){
+                updated[i].lower_bound = event.min;
+                updated[i].upper_bound = event.max;
+                flag=1;
+            }
+        }
+        if(flag===0) {
+            updated.push({
+                "id": id,
+                "lower_bound": event.min,
+                "upper_bound": event.max
+            });
+        }
+
+        this.setState({
+            updatedReactions : updated
         });
     };
 
@@ -37,11 +59,11 @@ class FluxControl extends React.Component{
     componentDidUpdate(prevProps,prevState) {
 
         console.log(prevProps);
-        console.log(this.props.reactions)
-
+        console.log(prevState);
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
-                values: this.props.reactions
+                values: this.props.reactions,
+                updatedReactions: this.props.updatedReactions
             });
         }
 
@@ -67,7 +89,7 @@ class FluxControl extends React.Component{
                                     min : this.state.values[index].lower_bound,
                                     max: this.state.values[index].upper_bound
                                 }}
-                                onChange={this.handleChange(index)} />
+                                onChange={this.handleChange(index,reaction.id)} />
                         </td>
 
                     </tr>)
