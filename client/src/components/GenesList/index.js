@@ -16,8 +16,8 @@ function GenesList(props) {
                     }}
                     data-div_id={gene.id}
                     key={gene.id} >
-                    <th scope='row'>{gene.id}</th>
-                    <td>{String(gene.functional)}</td>
+                    <th className="hoverSection" scope='row'>{gene.id}</th>
+                    <td className="hoverSection">{String(gene.functional)}</td>
                 </tr>)
         });
         return (

@@ -3,6 +3,7 @@ import { Table, UncontrolledTooltip} from 'reactstrap'
 import {Icon} from "react-icons-kit";
 import ReactionLegend from "./ReactionLegend";
 import { infoCircle } from 'react-icons-kit/fa/infoCircle';
+import './index.css';
 
 function ReactionsList(props) {
 
@@ -17,8 +18,8 @@ function ReactionsList(props) {
                     data-div_id={reaction.id}
                     key={reaction.id} >
 
-                    <th style={{width: "35%"}} scope='row'>{reaction.id}</th>
-                    <td style={{width: "65%"}}>{reaction.equation}</td>
+                    <th className="hoverSection" style={{width: "35%"}} scope='row'>{reaction.id}</th>
+                    <td className="hoverSection" style={{width: "65%"}}>{reaction.equation}</td>
                 </tr>)
         });
         return (
