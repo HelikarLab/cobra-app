@@ -7,6 +7,8 @@ const model = {
   currentModel: {},
   currentModelFile: '',
   currentAnalysisModel : {},
+  currentFBAModel: {},
+  currentFVAModel : {},
   updatedReactions : [],
   updatedGenes : [],
 
@@ -43,7 +45,7 @@ const model = {
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }),
-  generateAnalysisModel : thunk((actions, payload, {getStoreState})=>{
+  runFluxBalanceAnalysis : thunk((actions, payload)=>{
       const formData = new FormData();
       formData.append('model', JSON.stringify(payload));
       axios({
@@ -53,7 +55,21 @@ const model = {
       })
         .then(res=> {
           const json = JSON.parse(res.data);
-          actions.setCurrentAnalysisModel(json);
+          actions.setCurrentFBAModel(json);
+        })
+        .catch(err=>console.log(err))
+  }),
+  runFluxVariabilityAnalysis : thunk((actions, payload)=>{
+    const formData = new FormData();
+    formData.append('model', JSON.stringify(payload));
+    axios({
+      method: 'post',
+      url: `${API_URL}/api/model/id/fva/optimize`,
+      data : formData
+    })
+        .then(res=> {
+          const json = JSON.parse(res.data);
+          actions.setCurrentFVAModel(json);
         })
         .catch(err=>console.log(err))
   }),
@@ -65,7 +81,16 @@ const model = {
   setCurrentModelFile: action((state, payload) => {
     state.currentModelFile = payload
   }),
+  setCurrentFBAModel : action((state,payload)=>{
+    console.log(payload)
+    state.currentFBAModel = payload
+  }),
+  setCurrentFVAModel : action((state,payload)=>{
+    console.log(payload)
+    state.currentFVAModel = payload
+  }),
   setCurrentAnalysisModel : action((state,payload)=>{
+    console.log(payload)
     state.currentAnalysisModel = payload
   })
 };

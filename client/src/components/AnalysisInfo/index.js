@@ -13,14 +13,15 @@ function AnalysisInfo(props){
                 <h5>{props.name}</h5>
                 <br/>
 
-                <div>
+                <h3>
                     Objective Value : &nbsp;
                     <Button color="info" disabled="true">
                         {
                             props.info
                         }
                     </Button>
-                </div>
+                </h3>
+                <hr/>
 
             </div>
         )

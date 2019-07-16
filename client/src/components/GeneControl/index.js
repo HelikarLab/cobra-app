@@ -95,7 +95,7 @@ class GeneControl extends React.Component{
                     </h3>
                     <hr/>
                     <div style={{
-                        height: '300px',
+                        height: '325px',
                         overflowY: 'scroll',
                         overflowX: 'none',
                         borderRight: "1px solid #adadad",
@@ -107,9 +107,6 @@ class GeneControl extends React.Component{
                                 <th style={{width: "15%"}}>Id</th>
                                 <th style={{width: "85%"}}>
                                     Gene Knocked Off
-                                    <Button
-                                        color="warning" style={{marginLeft:"20px",padding: "3px 12px 3px 12px"}}>Save the State
-                                    </Button>
                                 </th>
                             </tr>
                             </thead>

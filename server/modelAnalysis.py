@@ -41,7 +41,7 @@ for r in range(len(initialModel.reactions)):
                         'lower_bound' : initialModel.reactions[r].lower_bound,
                         'upper_bound' : initialModel.reactions[r].upper_bound,
                         'reversible': initialModel.reactions[r].reversibility,
-                        'flux' : initialModel.reactions[r].flux,
+                        'flux' : "%.5f" % initialModel.reactions[r].flux,
                         'compartments': repr(initialModel.reactions[r].compartments)[1:-1],
                         'reactants': reactantsList,
                         'products': productsList,

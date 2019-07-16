@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button,  Table} from 'reactstrap'
+import {Button, CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
 
@@ -9,19 +9,57 @@ class FluxControl extends React.Component{
         super(props);
 
         this.state = {
-            values : null,
+            checkedItems: new Map(),
+            reactions : null,
             updatedReactions: []
         };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeReactions = this.handleChangeReactions.bind(this);
+        this.handleChangeKnockOut= this.handleChangeKnockOut.bind(this);
     }
 
-    handleChange = (param,id) => event =>{
-        const array = this.state.values;
+    handleChangeKnockOut = (params,id) => e => {
+
+        const item = e.target.name;
+        const isChecked = e.target.checked;
+        this.setState(
+            prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked)}),
+        );
+        const array = this.state.reactions;
+        array[params].functional = !e.target.checked;
+        this.setState({
+            reactions: array
+        });
+
+        const updated = this.state.updatedReactions;
+        let i;
+        let flag=0;
+        for(i=0;i<updated.length;i++){
+            if(id===updated[i].id){
+                updated[i].functional = !e.target.checked;
+                flag=1;
+            }
+        }
+        if(flag===0) {
+            updated.push({
+                "id": id,
+                "functional": !e.target.checked
+            });
+        }
+
+        this.setState({
+            updatedReactions : updated
+        });
+
+    };
+
+
+    handleChangeReactions = (param,id) => event =>{
+        const array = this.state.reactions;
         array[param].lower_bound = event.min;
         array[param].upper_bound = event.max;
         this.setState({
-            values: array
+            reactions: array
         });
 
         const updated = this.state.updatedReactions;
@@ -51,7 +89,7 @@ class FluxControl extends React.Component{
 
         if(this.props.reactions){
             this.setState({
-                values: this.props.reactions
+                reactions: this.props.reactions
             });
         }
     }
@@ -59,7 +97,7 @@ class FluxControl extends React.Component{
     componentWillReceiveProps(nextProps, nextContext) {
         if(nextProps.reactions !== this.props.reactions){
             this.setState({
-                values: nextProps.reactions
+                reactions: nextProps.reactions
             });
         }
     }
@@ -68,7 +106,7 @@ class FluxControl extends React.Component{
 
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
-                values: this.props.reactions,
+                reactions: this.props.reactions,
                 updatedReactions: this.props.updatedReactions
             });
         }
@@ -79,25 +117,32 @@ class FluxControl extends React.Component{
 
         if (this.props.reactions) {
 
-            const tableData = this.state&&this.state.values&&this.props.reactions.map((reaction,index) => {
+            const tableData = this.state&&this.state.reactions&&this.props.reactions.map((reaction,index) => {
 
                 return (
                     <tr data-div_id={reaction.id}
                         key={reaction.id}>
 
-                        <td style={{width: "15%"}} >{reaction.id}</td>
-                        <td style={{width: "85%"}} >
-
+                        <td >{reaction.id}</td>
+                        <td >
                             <InputRange
-                                minValue={this.state.values[index].min}
-                                maxValue={this.state.values[index].max}
+                                minValue={this.state.reactions[index].min}
+                                maxValue={this.state.reactions[index].max}
                                 value={{
-                                    min : this.state.values[index].lower_bound,
-                                    max: this.state.values[index].upper_bound
+                                    min : this.state.reactions[index].lower_bound,
+                                    max: this.state.reactions[index].upper_bound
                                 }}
-                                onChange={this.handleChange(index,reaction.id)} />
+                                onChange={this.handleChangeReactions(index,reaction.id)} />
                         </td>
-
+                        {
+                            this.props.knockOff ?
+                                <td>
+                                    <label key={reaction.id} style={{float: "right"}}>
+                                        <CustomInput type="switch" id={reaction.id} name={reaction.id}  checked={this.state.checkedItems.get(reaction.id)} onChange={this.handleChangeKnockOut(index,reaction.id)}/>
+                                    </label>
+                                </td>           :
+                                null
+                        }
                     </tr>)
             });
 
@@ -108,7 +153,7 @@ class FluxControl extends React.Component{
                     </h3>
                     <hr/>
                     <div style={{
-                        height: '300px',
+                        height: this.props.height,
                         overflowY: 'scroll',
                         overflowX: 'none',
                         borderRight: "1px solid #adadad",
@@ -117,21 +162,22 @@ class FluxControl extends React.Component{
                         <Table borderless>
                             <thead>
                             <tr >
-                                <th style={{width: "15%"}}>Id</th>
-                                <th style={{width: "85%"}}>
+                                <th >Id</th>
+                                <th >
                                     Flux Control
-                                    <Button
-                                        color="warning" style={{marginLeft:"50px",padding: "3px 12px 3px 12px"}}>Save the State
-                                    </Button>
                                 </th>
+                                {
+                                    this.props.knockOff?
+                                        <th>
+                                            KnockOut?
+                                        </th>           :
+                                        null
+                                }
                             </tr>
                             </thead>
                             <tbody>
                                     {tableData}
                             </tbody>
-
-
-
                         </Table>
                     </div>
 
