@@ -3,7 +3,8 @@ import cobra
 import json
 
 path = './uploads/sbmlFile'
-initialModel = cobra.io.read_sbml_model(path)
+
+initialModel = cobra.io.load_json_model(path)
 
 analysisModel = json.loads(sys.argv[2])
 

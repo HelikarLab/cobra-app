@@ -5,8 +5,8 @@ import json
 path = 'uploads/' + sys.argv[1]
 
 tempModel = cobra.io.read_sbml_model(path)
-cobra.io.save_json_model(tempModel, "path")
-model = cobra.io.load_json_model( "path")
+cobra.io.save_json_model(tempModel, path)
+model = cobra.io.load_json_model(path)
 
 reactionData = []
 r = 0

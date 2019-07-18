@@ -1,14 +1,16 @@
 import React from 'react'
 import { Row, Col, Button} from 'reactstrap'
 import {useStoreState, useStoreActions} from "easy-peasy";
-import FluxControl from "../FluxControl";
-import GeneControl from "../GeneControl";
+import FluxControlForFBA from "../FluxControl/forFBA";
+import GeneControlForFBA from "../GeneControl/forFBA";
 import SimulationGraph from "../SimulationGraph";
 import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 import AnalysisInfo from "../AnalysisInfo";
 import FluxResults from "../FluxResults";
 import EssentialComponents from "../Essential Components";
+import FluxControlForFVA from "../FluxControl/forFVA";
+import GeneControlForFVA from "../GeneControl/forFVA";
 
 
 function SimulationTab() {
@@ -17,17 +19,28 @@ function SimulationTab() {
 
     const currentReactions = useStoreState( state => state.currentModel.reactions);
     const currentGenes= useStoreState( state => state.currentModel.genes);
+
     const updatedGenes = useStoreState(state => state.updatedGenes);
     const updatedReactions = useStoreState(state => state.updatedReactions);
 
-    const runFluxBalanceAnalysis = useStoreActions( action => action.runFluxBalanceAnalysis);
-    const runFluxVariabilityAnalysis = useStoreActions( action => action.runFluxVariabilityAnalysis);
+    const currentFVAReactions = useStoreState( state => state.currentAnalysisModel.reactions);
+    const currentFVAGenes= useStoreState( state => state.currentAnalysisModel.genes);
 
     const analysisMetabolites = useStoreState(state => state.currentFBAModel.metabolites);
     const analysisReactions = useStoreState(state => state.currentFBAModel.reactions);
     const analysisGenes = useStoreState(state => state.currentFBAModel.genes);
     const name = useStoreState(state => state.currentFBAModel.name);
     const info = useStoreState(state=> state.currentFBAModel.objective_value);
+    const analysisFVAReactions = useStoreState(state=> state.currentFVAModel.reactions);
+    const analysisFVAName = useStoreState(state=>state.currentFVAModel.name);
+    const analysisFVAInfo = useStoreState(state=> state.currentFVAModel.objective_value);
+
+
+    const runFluxBalanceAnalysis = useStoreActions( action => action.runFluxBalanceAnalysis);
+    const runFluxVariabilityAnalysis = useStoreActions( action => action.runFluxVariabilityAnalysis);
+
+    const runEssentiality = useStoreActions(action=> action.runEssentiality);
+    const runSyntheticLethality = useStoreActions(action=>action.runSyntheticLethality);
 
     function runFBA(e) {
         e.preventDefault();
@@ -43,7 +56,18 @@ function SimulationTab() {
             genes: updatedGenes
         })
     }
-
+    function runEssentialityFunction(e) {
+        e.preventDefault();
+        runEssentiality({
+            str: "essentiality"
+        })
+    }
+    function runSyntheticLethalityFunction(e) {
+        e.preventDefault();
+        runSyntheticLethality({
+            str: "syntheticlethality"
+        })
+    }
     return(
         <React.Fragment>
 
@@ -78,6 +102,9 @@ function SimulationTab() {
                     </NavItem>
                 </Nav>
                 <TabContent activeTab={activeTab}>
+                    {/*
+                        FLUX BALANCE ANALYSIS
+                    */}
                     <TabPane tabId={1}>
                         <Row >
                             <Col md="7" >
@@ -97,14 +124,14 @@ function SimulationTab() {
                                             updatedReactions={analysisReactions}/>
                                     </Col>
                                     <Col md="7">
-                                            <FluxControl
+                                            <FluxControlForFBA
                                                 height={"325px"}
                                                 knockOff={false}
                                                 updatedReactions={updatedReactions}
                                                 reactions={currentReactions}
                                             />
                                             <br/>
-                                            <GeneControl
+                                            <GeneControlForFBA
                                                 updatedGenes={updatedGenes}
                                                 genes={currentGenes}/>
                                     </Col>
@@ -115,6 +142,9 @@ function SimulationTab() {
                             </Col>
                         </Row>
                     </TabPane>
+                    {/*
+                        FLUX VARIABILITY ANALYSIS
+                    */}
                     <TabPane tabId={2}>
                         <Row >
                             <Col md="7" >
@@ -123,7 +153,7 @@ function SimulationTab() {
                                         <h3>
                                             <Button
                                                 onClick={
-                                                    console.log(updatedReactions)
+                                                    runFVA
                                                 }
                                                 color="success" style={{position: "absolute",left: "25%"}}>Run the Simulation >
                                             </Button>
@@ -131,29 +161,29 @@ function SimulationTab() {
                                         <br/><hr/>
                                     </Col>
                                     <Col md="8">
-                                        <FluxControl
+                                        <FluxControlForFVA
                                             knockOff={true}
                                             height={"325px"}
                                             updatedReactions={updatedReactions}
-                                            reactions={currentReactions}
+                                            reactions={currentFVAReactions}
                                         />
                                     </Col>
                                 </Row>
                                 <Row style={{padding: "20px"}}>
                                     <Col md="4">
-                                        <AnalysisInfo name={name} info={info}/>
+                                        <AnalysisInfo name={analysisFVAName} info={analysisFVAInfo}/>
                                     </Col>
                                     <Col md="8">
-                                        <GeneControl
+                                        <GeneControlForFVA
                                             updatedGenes={updatedGenes}
-                                            genes={currentGenes}/>
+                                            genes={currentFVAGenes}/>
                                     </Col>
                                 </Row>
                             </Col>
                             <Col md="5" >
                                 <FluxResults
                                     height={"750px"}
-                                    updatedReactions={analysisReactions}/>
+                                    updatedReactions={analysisFVAReactions}/>
                             </Col>
                         </Row>
                     </TabPane>
@@ -165,7 +195,7 @@ function SimulationTab() {
                                         <h3>
                                             <Button
                                                 onClick={
-                                                    console.log(updatedReactions)
+                                                    runEssentialityFunction
                                                 }
                                                 color="success" style={{position: "absolute",left: "25%"}}>Run the Simulation >
                                             </Button>
@@ -175,10 +205,10 @@ function SimulationTab() {
                                         BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControl
+                                        <FluxControlForFBA
                                             height={"750px"}
                                             knockOff={true}
-                                            updatedReactions={updatedReactions}
+                                            // updatedReactions={updatedReactions}
                                             reactions={currentReactions}
                                         />
                                     </Col>
@@ -200,7 +230,7 @@ function SimulationTab() {
                                         <h3>
                                             <Button
                                                 onClick={
-                                                    console.log(updatedReactions)
+                                                    runSyntheticLethalityFunction
                                                 }
                                                 color="success" style={{position: "absolute",left: "25%"}}>Run the Simulation >
                                             </Button>
@@ -211,10 +241,10 @@ function SimulationTab() {
                                         BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS AND GENES JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControl
+                                        <FluxControlForFBA
                                             knockOff={true}
                                             height={"325px"}
-                                            updatedReactions={updatedReactions}
+                                            // updatedReactions={updatedReactions}
                                             reactions={currentReactions}
                                         />
                                     </Col>
@@ -224,8 +254,8 @@ function SimulationTab() {
                                         <AnalysisInfo name={name} />
                                     </Col>
                                     <Col md="8">
-                                        <GeneControl
-                                            updatedGenes={updatedGenes}
+                                        <GeneControlForFBA
+                                            // updatedGenes={updatedGenes}
                                             genes={currentGenes}/>
                                     </Col>
                                 </Row>

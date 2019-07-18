@@ -4,11 +4,13 @@ import axios from 'axios'
 const API_URL = 'http://localhost:5000' || process.env.REACT_APP_API_URL;
 
 const model = {
-  currentModel: {},
   currentModelFile: '',
+  currentModel: {},
   currentAnalysisModel : {},
   currentFBAModel: {},
   currentFVAModel : {},
+  currentEssentialityModel : {},
+  currentSyntheticLethalityModel : {},
   updatedReactions : [],
   updatedGenes : [],
 
@@ -25,7 +27,7 @@ const model = {
         const json = JSON.parse(res.data);
         actions.setCurrentModelFile(file);
         actions.setCurrentModel(json)
-
+        actions.setCurrentAnalysisModel(json)
       })
       .catch(err => {
         console.log(debug(err))
@@ -50,7 +52,7 @@ const model = {
       formData.append('model', JSON.stringify(payload));
       axios({
         method: 'post',
-        url: `${API_URL}/api/model/id/optimize`,
+        url: `${API_URL}/api/model/id/fba/optimize`,
         data : formData
       })
         .then(res=> {
@@ -69,7 +71,38 @@ const model = {
     })
         .then(res=> {
           const json = JSON.parse(res.data);
+          console.log(res.data)
           actions.setCurrentFVAModel(json);
+        })
+        .catch(err=>console.log(err))
+  }),
+  runEssentiality : thunk((actions,payload)=>{
+    const formData = new FormData();
+    formData.append('model',JSON.stringify(payload));
+    axios({
+      method: 'post',
+      url: `${API_URL}/api/model/id/essentiality/optimize`,
+      data : formData
+    })
+        .then(res=>{
+          const json = JSON.parse(res.data);
+          actions.setCurrentEssentialityModel(json);
+          console.log(res.data)
+        })
+        .catch(err=>console.log(err))
+  }),
+  runSyntheticLethality: thunk((actions,payload)=>{
+    const formData = new FormData();
+    formData.append('model',JSON.stringify(payload));
+    axios({
+      method: 'post',
+      url: `${API_URL}/api/model/id/syntheticlethality/optimize`,
+      data : formData
+    })
+        .then(res=>{
+          const json = JSON.parse(res.data);
+          actions.setCurrentSyntheticLethalityModel(json);
+          console.log(res.data)
         })
         .catch(err=>console.log(err))
   }),
@@ -82,15 +115,18 @@ const model = {
     state.currentModelFile = payload
   }),
   setCurrentFBAModel : action((state,payload)=>{
-    console.log(payload)
     state.currentFBAModel = payload
   }),
   setCurrentFVAModel : action((state,payload)=>{
-    console.log(payload)
     state.currentFVAModel = payload
   }),
+  setCurrentEssentialityModel : action((state,payload)=>{
+    state.currentEssentialityModel = payload
+  }),
+  setCurrentSyntheticLethalityModel : action((state,payload)=>{
+    state.currentSyntheticLethalityModel = payload
+  }),
   setCurrentAnalysisModel : action((state,payload)=>{
-    console.log(payload)
     state.currentAnalysisModel = payload
   })
 };

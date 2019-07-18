@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Table} from 'reactstrap'
+import {Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import {  CustomInput} from 'reactstrap';
 
@@ -53,7 +53,6 @@ class GeneControl extends React.Component{
     };
 
     componentDidMount(prevProps,prevState) {
-
         if(this.props.genes){
             this.setState({
                 genes: this.props.genes
@@ -65,7 +64,7 @@ class GeneControl extends React.Component{
         if(prevProps.genes !== this.props.genes){
             this.setState({
                 genes: this.props.genes,
-                updatedGenes: this.props.updatedGenes
+                // updatedGenes: this.props.updatedGenes
             })
         }
     }

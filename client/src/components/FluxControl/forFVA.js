@@ -1,9 +1,9 @@
 import React from 'react'
-import {Button, CustomInput, Table} from 'reactstrap'
+import {CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
 
-class FluxControl extends React.Component{
+class FluxControlForFVA extends React.Component{
 
     constructor(props){
         super(props);
@@ -46,7 +46,6 @@ class FluxControl extends React.Component{
                 "functional": !e.target.checked
             });
         }
-
         this.setState({
             updatedReactions : updated
         });
@@ -76,7 +75,7 @@ class FluxControl extends React.Component{
             updated.push({
                 "id": id,
                 "lower_bound": event.min,
-                "upper_bound": event.max
+                "upper_bound": event.max,
             });
         }
 
@@ -86,7 +85,6 @@ class FluxControl extends React.Component{
     };
 
     componentDidMount(prevProps,prevState) {
-
         if(this.props.reactions){
             this.setState({
                 reactions: this.props.reactions
@@ -94,28 +92,18 @@ class FluxControl extends React.Component{
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        if(nextProps.reactions !== this.props.reactions){
-            this.setState({
-                reactions: nextProps.reactions
-            });
-        }
-    }
-
     componentDidUpdate(prevProps,prevState) {
-
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
                 reactions: this.props.reactions,
                 updatedReactions: this.props.updatedReactions
             });
         }
-
     }
 
     render() {
 
-        if (this.props.reactions) {
+        if (this.state.reactions) {
 
             const tableData = this.state&&this.state.reactions&&this.props.reactions.map((reaction,index) => {
 
@@ -176,7 +164,7 @@ class FluxControl extends React.Component{
                             </tr>
                             </thead>
                             <tbody>
-                                    {tableData}
+                            {tableData}
                             </tbody>
                         </Table>
                     </div>
@@ -191,4 +179,4 @@ class FluxControl extends React.Component{
 }
 
 
-export default FluxControl
+export default FluxControlForFVA

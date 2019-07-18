@@ -33,8 +33,10 @@ app.use(morgan('tiny'));
 // API Route Imports
 const uploadSbmlApi = require('./routes/uploadSbml');
 const modelApi = require('./routes/model');
-const analysisApi = require("./routes/analysisModel");
-
+const fluxBalanceAnalysisApi = require("./routes/fluxBalanceAnalysis");
+const fluxVariabilityAnalysisApi = require("./routes/fluxVariabilityAnalysis");
+const essentiality = require("./routes/essentiality");
+const syntheticLethality = require("./routes/syntheticLethality");
 
 /*
 
@@ -62,7 +64,10 @@ connectDb()
 // APIs
 app.use('/api/uploadSbml', uploadSbmlApi);
 app.use('/api/model', modelApi);
-app.use('/api/model/id/optimize',analysisApi);
+app.use('/api/model/id/fba/optimize',fluxBalanceAnalysisApi);
+app.use('/api/model/id/fva/optimize',fluxVariabilityAnalysisApi);
+app.use('/api/model/id/essentiality/optimize',essentiality);
+app.use('/api/model/id/syntheticlethality/optimize',syntheticLethality);
 
 // Error Handling
 app.use((err, req, res, next) => {
