@@ -38,23 +38,24 @@ for r in range(len(model.reactions)):
 metabolitesData = []
 m = 0
 for m in range(len(model.metabolites)):
-    metabolitesData.append({'id':model.metabolites[m].id, 'name' : model.metabolites[m].name,'formula':model.metabolites[m].formula, 'compartment': "'" + model.metabolites[m].compartment +"'"})
+    metabolitesData.append({'id':model.metabolites[m].id,
+                            'name' : model.metabolites[m].name,
+                            'formula':model.metabolites[m].formula,
+                            'compartment': "'" + model.metabolites[m].compartment +"'"})
 
 genesData = []
 g = 0
 for g in range(len(model.genes)):
-    genesData.append({'id':model.genes[g].id, 'name' : model.genes[g].name,'functional':model.genes[g].functional})
-
+    genesData.append({'id':model.genes[g].id,
+                      'name' : model.genes[g].name,
+                      'functional':model.genes[g].functional})
 
 data = {
         "name": model.name,
-        "noOfMetabolites": len(model.metabolites),
+        "id": model.id,
         "metabolites": metabolitesData,
-        "noOfReactions": len(model.reactions),
         "reactions": reactionData,
-        "noOfGenes": len(model.genes),
         "genes": genesData
-
 }
 
 print(json.dumps(data))

@@ -4,18 +4,19 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const db = require('./config/database');
-// require('dotenv').config();
+const formidableMiddleware = require('express-formidable');
+const db = require('./config/database');
+require('dotenv').config();
 
 const app = express();
 
 // CORS
 app.use(cors());
-
+app.use(formidableMiddleware());
 // JSON Payload Parsers
 app.use(express.json());
 // parse various different custom JSON types as JSON
-app.use(bodyParser.json({ type: 'application/*+json' }));
+app.use(bodyParser.json({ type: 'application/json' }));
 
 // parse some custom thing into a Buffer
 app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
@@ -38,15 +39,16 @@ const fluxVariabilityAnalysisApi = require("./routes/fluxVariabilityAnalysis");
 const essentiality = require("./routes/essentiality");
 const syntheticLethality = require("./routes/syntheticLethality");
 
-/*
 
 // Establishing and testing database connection
+//Remove comment on db.sync({ force: true }) to create every table again
 const connectDb = async (retries = 5) => {
   while (retries) {
     await db
       .authenticate()
       .then(() => {
         console.log('Database connected...')
+        db.sync({ force: true })
         retries = 0
       })
       .catch(async err => {
@@ -59,7 +61,6 @@ const connectDb = async (retries = 5) => {
   }
 }
 connectDb()
-*/
 
 // APIs
 app.use('/api/uploadSbml', uploadSbmlApi);

@@ -1,27 +1,22 @@
-const Sequelize = require('sequelize')
-const db = require('../config/database')
+const Sequelize = require('sequelize');
+const db = require('../config/database');
 
 module.exports = db.define(
     'gene',
     {
         name: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             field: 'name',
-        },
-        sbmlId: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'sbml_id',
         },
         functional: {
             type: Sequelize.BOOLEAN,
-            allowNull: false,
+            allowNull: true,
             field: 'functional',
         },
         modelId: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'models',
                 key: 'id',

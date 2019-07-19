@@ -262,7 +262,7 @@ class Graph extends React.Component {
                     minSize: 6,
                     maxSize: 16,
                     color: 'rgb(47, 109, 206)',
-                    texture: require('../../assets/circle.png'),
+                    texture: require('../../../assets/circle.png'),
                     label: {
                         hideSize: 16,
                         color: 'rgb(0, 0, 0)',
@@ -275,7 +275,7 @@ class Graph extends React.Component {
                         minSize: 1,
                         maxSize: 16,
                         aspect: 1,
-                        texture: require('../../assets/arrow.png'),
+                        texture: require('../../../assets/arrow.png'),
                         hideSize: 1,
                     },
                     type: 'line',
@@ -357,9 +357,10 @@ class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if ((prevProps.reactions !== this.props.reactions ||
+        if ( this.props.reactions && this.props.metabolites &&
+            (prevProps.reactions !== this.props.reactions ||
             prevProps.metabolites !== this.props.metabolites ||
-            prevState.currentCompartment !== this.state.currentCompartment) && this.props.reactions && this.props.metabolites)
+            prevState.currentCompartment !== this.state.currentCompartment))
         {
 
             let sorted = this.props.reactions

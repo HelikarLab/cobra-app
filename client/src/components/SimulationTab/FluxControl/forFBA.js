@@ -1,19 +1,17 @@
 import React from 'react'
-import {CustomInput, Table} from 'reactstrap'
+import { CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
 
-class FluxControlForFVA extends React.Component{
+class FluxControlForFBA extends React.Component{
 
     constructor(props){
         super(props);
-
         this.state = {
             checkedItems: new Map(),
             reactions : null,
-            updatedReactions: []
+            updatedReactions: null
         };
-
         this.handleChangeReactions = this.handleChangeReactions.bind(this);
         this.handleChangeKnockOut= this.handleChangeKnockOut.bind(this);
     }
@@ -46,6 +44,7 @@ class FluxControlForFVA extends React.Component{
                 "functional": !e.target.checked
             });
         }
+
         this.setState({
             updatedReactions : updated
         });
@@ -75,13 +74,14 @@ class FluxControlForFVA extends React.Component{
             updated.push({
                 "id": id,
                 "lower_bound": event.min,
-                "upper_bound": event.max,
+                "upper_bound": event.max
             });
         }
 
         this.setState({
             updatedReactions : updated
         });
+
     };
 
     componentDidMount(prevProps,prevState) {
@@ -91,26 +91,30 @@ class FluxControlForFVA extends React.Component{
             });
         }
     }
-
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps.reactions !== this.props.reactions){
+            this.setState({
+                reactions: nextProps.reactions
+            });
+        }
+    }
     componentDidUpdate(prevProps,prevState) {
         if(prevProps.reactions !== this.props.reactions){
+            console.log(this.props.updatedReactions)
             this.setState({
                 reactions: this.props.reactions,
                 updatedReactions: this.props.updatedReactions
             });
         }
+
     }
 
     render() {
-
-        if (this.state.reactions) {
-
-            const tableData = this.state&&this.state.reactions&&this.props.reactions.map((reaction,index) => {
-
+        if (this.state.reactions && this.props.reactions) {
+            const tableData = this.props.reactions.map((reaction,index) => {
                 return (
                     <tr data-div_id={reaction.id}
                         key={reaction.id}>
-
                         <td >{reaction.id}</td>
                         <td >
                             <InputRange
@@ -164,7 +168,7 @@ class FluxControlForFVA extends React.Component{
                             </tr>
                             </thead>
                             <tbody>
-                            {tableData}
+                                    {tableData}
                             </tbody>
                         </Table>
                     </div>
@@ -179,4 +183,4 @@ class FluxControlForFVA extends React.Component{
 }
 
 
-export default FluxControlForFVA
+export default FluxControlForFBA

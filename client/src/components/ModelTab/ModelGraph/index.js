@@ -116,7 +116,7 @@ class Graph extends React.Component {
           minSize: 6,
           maxSize: 16,
           color: 'rgb(47, 109, 206)',
-          texture: require('../../assets/circle.png'),
+          texture: require('../../../assets/circle.png'),
           label: {
             hideSize: 16,
             color: 'rgb(0, 0, 0)',
@@ -129,7 +129,7 @@ class Graph extends React.Component {
             minSize: 1,
             maxSize: 16,
             aspect: 1,
-            texture: require('../../assets/arrow.png'),
+            texture: require('../../../assets/arrow.png'),
             hideSize: 1,
           },
           type: 'line',

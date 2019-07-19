@@ -1,54 +1,39 @@
 import React from 'react'
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'
 import NavBar from './components/NavBar'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import ImportSbmlForm from './components/ImportSbmlForm'
-
+import SavedModels from './components/SavedModels'
+toast.configure({
+    position: toast.POSITION.BOTTOM_RIGHT,
+    autoClose: 2000,
+});
 
 function App() {
-  const [modal, setModal] = React.useState(false);
+    const [importModal, setImportModal] = React.useState(false)
+    const [savedModal, setSavedModal] = React.useState(false)
 
   return (
     <React.Fragment>
-
-      <NavBar
-        importModel={() => {
-          setModal(!modal)
-        }}
-      />
-
-      <Modal
-        isOpen={modal}
-        toggle={() => {
-          setModal(!modal)
-        }}>
-
-        <ModalHeader
-          toggle={() => {
-            setModal(!modal)
-          }}>
-
-          Import an existing SBML Model
-        </ModalHeader>
-
-        <ModalBody>
-
-          <ImportSbmlForm
-            closeModal={() => {
-              setModal(!modal)
-            }}/>
-
-        </ModalBody>
-      </Modal>
-
-        {/*
-        <ModelTab />
-
-        */}
-
-        {/*
-        <SimulationTab />
-        */}
-
+          <NavBar importModel={() => {setImportModal(!importModal)}}
+                  savedModels={() => setSavedModal(!importModal)}/>
+            <Modal isOpen={importModal} toggle={() => {setImportModal(!importModal)}}>
+                <ModalHeader toggle={() => {setImportModal(!importModal)}}>
+                  Import an existing SBML Model
+                </ModalHeader>
+                <ModalBody>
+                  <ImportSbmlForm closeModal={() => {setImportModal(!importModal)}}/>
+                </ModalBody>
+            </Modal>
+            <Modal isOpen={savedModal} toggle={() => setSavedModal(!savedModal)}>
+                <ModalHeader toggle={() => setSavedModal(!savedModal)}>
+                    Saved Models
+                </ModalHeader>
+                <ModalBody>
+                    <SavedModels />
+                </ModalBody>
+            </Modal>
     </React.Fragment>
   )
 }

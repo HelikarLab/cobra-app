@@ -1,46 +1,38 @@
 import React from 'react'
 import { Row, Col, Button} from 'reactstrap'
 import {useStoreState, useStoreActions} from "easy-peasy";
-import FluxControlForFBA from "../FluxControl/forFBA";
-import GeneControlForFBA from "../GeneControl/forFBA";
-import SimulationGraph from "../SimulationGraph";
+import FluxControlForFBA from "./FluxControl/forFBA";
+import GeneControlForFBA from "./GeneControl/forFBA";
+import SimulationGraph from "./SimulationGraph";
 import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
-import AnalysisInfo from "../AnalysisInfo";
-import FluxResults from "../FluxResults";
-import EssentialComponents from "../Essential Components";
-import FluxControlForFVA from "../FluxControl/forFVA";
-import GeneControlForFVA from "../GeneControl/forFVA";
+import AnalysisInfo from "./AnalysisInfo";
+import FluxResults from "./FluxResults";
+import EssentialComponents from "./Essential Components";
+import FluxControlForFVA from "./FluxControl/forFVA";
+import GeneControlForFVA from "./GeneControl/forFVA";
 
 
 function SimulationTab() {
 
     const [activeTab, toggle] = React.useState( 1);
 
-    const currentReactions = useStoreState( state => state.currentModel.reactions);
-    const currentGenes= useStoreState( state => state.currentModel.genes);
+    const {reactions,genes }= useStoreState( state => state.modelTab.currentModel);
+    const {updatedReactions, updatedGenes} = useStoreState( state => state.simulationTab);
 
-    const updatedGenes = useStoreState(state => state.updatedGenes);
-    const updatedReactions = useStoreState(state => state.updatedReactions);
+    const currentFVAReactions = useStoreState( state => state.modelTab.currentModel.reactions);
+    const currentFVAGenes= useStoreState( state => state.modelTab.currentModel.genes);
 
-    const currentFVAReactions = useStoreState( state => state.currentAnalysisModel.reactions);
-    const currentFVAGenes= useStoreState( state => state.currentAnalysisModel.genes);
+    const analysisMetabolites = useStoreState(state => state.simulationTab.currentFBAModel.metabolites);
+    const analysisReactions = useStoreState(state => state.simulationTab.currentFBAModel.reactions);
+    const analysisGenes = useStoreState(state => state.simulationTab.currentFBAModel.genes);
+    const name = useStoreState(state => state.simulationTab.currentFBAModel.name);
+    const info = useStoreState(state=> state.simulationTab.currentFBAModel.objective_value);
+    const analysisFVAReactions = useStoreState(state=> state.simulationTab.currentFVAModel.reactions);
+    const analysisFVAName = useStoreState(state=>state.simulationTab.currentFVAModel.name);
+    const analysisFVAInfo = useStoreState(state=> state.simulationTab.currentFVAModel.objective_value);
 
-    const analysisMetabolites = useStoreState(state => state.currentFBAModel.metabolites);
-    const analysisReactions = useStoreState(state => state.currentFBAModel.reactions);
-    const analysisGenes = useStoreState(state => state.currentFBAModel.genes);
-    const name = useStoreState(state => state.currentFBAModel.name);
-    const info = useStoreState(state=> state.currentFBAModel.objective_value);
-    const analysisFVAReactions = useStoreState(state=> state.currentFVAModel.reactions);
-    const analysisFVAName = useStoreState(state=>state.currentFVAModel.name);
-    const analysisFVAInfo = useStoreState(state=> state.currentFVAModel.objective_value);
-
-
-    const runFluxBalanceAnalysis = useStoreActions( action => action.runFluxBalanceAnalysis);
-    const runFluxVariabilityAnalysis = useStoreActions( action => action.runFluxVariabilityAnalysis);
-
-    const runEssentiality = useStoreActions(action=> action.runEssentiality);
-    const runSyntheticLethality = useStoreActions(action=>action.runSyntheticLethality);
+    const {runFluxBalanceAnalysis,runFluxVariabilityAnalysis,runEssentiality,runSyntheticLethality}=useStoreActions(actions => actions.simulationTab)
 
     function runFBA(e) {
         e.preventDefault();
@@ -118,6 +110,9 @@ function SimulationTab() {
                                             color="success" style={{position: "absolute",left: "25%"}}>Run the Simulation >
                                         </Button></h3>
                                         <br/><hr/>
+                                        {
+                                            console.log(info)
+                                        }
                                         <AnalysisInfo name={name} info={info}/>
                                         <FluxResults
                                             height={"450px"}
@@ -128,12 +123,12 @@ function SimulationTab() {
                                                 height={"325px"}
                                                 knockOff={false}
                                                 updatedReactions={updatedReactions}
-                                                reactions={currentReactions}
+                                                reactions={reactions}
                                             />
                                             <br/>
                                             <GeneControlForFBA
                                                 updatedGenes={updatedGenes}
-                                                genes={currentGenes}/>
+                                                genes={genes}/>
                                     </Col>
                                 </Row>
                             </Col>
@@ -209,7 +204,7 @@ function SimulationTab() {
                                             height={"750px"}
                                             knockOff={true}
                                             // updatedReactions={updatedReactions}
-                                            reactions={currentReactions}
+                                            reactions={reactions}
                                         />
                                     </Col>
                                 </Row>
@@ -245,7 +240,7 @@ function SimulationTab() {
                                             knockOff={true}
                                             height={"325px"}
                                             // updatedReactions={updatedReactions}
-                                            reactions={currentReactions}
+                                            reactions={reactions}
                                         />
                                     </Col>
                                 </Row>
@@ -256,7 +251,7 @@ function SimulationTab() {
                                     <Col md="8">
                                         <GeneControlForFBA
                                             // updatedGenes={updatedGenes}
-                                            genes={currentGenes}/>
+                                            genes={genes}/>
                                     </Col>
                                 </Row>
                             </Col>

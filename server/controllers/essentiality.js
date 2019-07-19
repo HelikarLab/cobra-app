@@ -14,6 +14,7 @@ module.exports = async function (req, res) {
             args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
         };
 
+
         PythonShell.run('pythonScripts/essentiality.py', options, function (err, data) {
             if (err) {
                 console.error(err);

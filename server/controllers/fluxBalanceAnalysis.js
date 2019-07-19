@@ -2,7 +2,7 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 
 module.exports = async function (req, res) {
-
+    console.log(req.fields)
     try {
         fs.writeFile("./analysis/modelForFBA.json", Object.values(req.fields)[0], function (err) {
                 if (err) throw err;

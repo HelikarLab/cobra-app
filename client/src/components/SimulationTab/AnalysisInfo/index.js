@@ -10,7 +10,8 @@ function AnalysisInfo(props){
                 <h3>Analysis Details</h3>
 
                 <hr/><br/>
-                <h5>{props.name}</h5>
+                <h5>Name: &nbsp; {props.name}</h5>
+
                 <br/>
 
                 <h3>

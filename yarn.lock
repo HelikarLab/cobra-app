@@ -2546,7 +2546,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.3:
+classnames@^2.2.3, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -3283,7 +3283,7 @@ data-urls@^1.0.0, data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@^1.23.0:
+date-fns@^1.23.0, date-fns@^1.30.1:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
@@ -8730,7 +8730,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9126,7 +9126,17 @@ react-side-effect@^1.1.0:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
-react-transition-group@^2.3.1:
+react-toastify@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-5.3.2.tgz#9de4b426656587722f7e2f99f5f90e974ba5fee6"
+  integrity sha512-YHTTey7JWqXVkkBIeJ34PAvQELmGfLEGCx9bu68aIZYd+kRU2u9k/nG3AydgbX/uevIb4QNpeeE98DjkooMs5w==
+  dependencies:
+    "@babel/runtime" "^7.4.2"
+    classnames "^2.2.6"
+    prop-types "^15.7.2"
+    react-transition-group "^2.6.1"
+
+react-transition-group@^2.3.1, react-transition-group@^2.6.1:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
   integrity sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==
