@@ -1,12 +1,14 @@
 import sys
 import cobra
 import json
+from cobra.flux_analysis import flux_variability_analysis
 
 path = './uploads/sbmlFile'
 
 initialModel = cobra.io.load_json_model(path)
 
 analysisModel = json.loads(sys.argv[2])
+i=0
 
 for initialReaction in range(len(initialModel.reactions)):
     for updatedReaction in range(len(analysisModel['reactions'])):
@@ -15,7 +17,7 @@ for initialReaction in range(len(initialModel.reactions)):
                 initialModel.reactions[initialReaction].lower_bound = analysisModel['reactions'][updatedReaction]['lower_bound']
                 initialModel.reactions[initialReaction].upper_bound = analysisModel['reactions'][updatedReaction]['upper_bound']
             if('functional' in analysisModel['reactions'][updatedReaction]):
-                if(analysisModel['reactions'][updatedReaction]['functional']=='false'):
+                if(analysisModel['reactions'][updatedReaction]['functional']==False):
                     initialModel.reactions[initialReaction].knock_out()
 
 for initialGene in range(len(initialModel.genes)):
@@ -40,18 +42,21 @@ for r in range(len(initialModel.reactions)):
         metabolitesList.append(list(initialModel.reactions[r].metabolites.keys())[mL].id)
     reactionData.append({'id':initialModel.reactions[r].id,
                         'name': initialModel.reactions[r].name,
-                        'equation':initialModel.reactions[r].reaction,
-                        'min' : initialModel.reactions[r].lower_bound,
-                        'max' : initialModel.reactions[r].upper_bound,
-                        'lower_bound' : initialModel.reactions[r].lower_bound,
-                        'upper_bound' : initialModel.reactions[r].upper_bound,
-                        'reversible': initialModel.reactions[r].reversibility,
+                        'minimum' : str(flux_variability_analysis(initialModel, initialModel.reactions[r]).minimum.values[0]),
+                        'maximum' : str(flux_variability_analysis(initialModel, initialModel.reactions[r]).maximum.values[0]),
+#                        'equation':initialModel.reactions[r].reaction,
+#                        'min' : initialModel.reactions[r].lower_bound,
+#                        'max' : initialModel.reactions[r].upper_bound,
+#                       'lower_bound' : initialModel.reactions[r].lower_bound,
+#                        'upper_bound' : initialModel.reactions[r].upper_bound,
+#                        'reversible': initialModel.reactions[r].reversibility,
                         'flux' : "%.5f" % initialModel.reactions[r].flux,
-                        'compartments': repr(initialModel.reactions[r].compartments)[1:-1],
-                        'reactants': reactantsList,
-                        'products': productsList,
-                        'metabolites' : metabolitesList,
-                        'gene_reaction_rule' : initialModel.reactions[r].gene_reaction_rule})
+#                        'compartments': repr(initialModel.reactions[r].compartments)[1:-1],
+#                        'reactants': reactantsList,
+#                        'products': productsList,
+#                        'metabolites' : metabolitesList,
+#                        'gene_reaction_rule' : initialModel.reactions[r].gene_reaction_rule
+                        })
 
 metabolitesData = []
 m = 0
@@ -66,9 +71,9 @@ for g in range(len(initialModel.genes)):
 data = {
         "name": initialModel.name,
         "objective_value" : solution.objective_value,
-        "metabolites": metabolitesData,
+#        "metabolites": metabolitesData,
         "reactions": reactionData,
-        "genes": genesData
+#        "genes": genesData
 }
 
 print(json.dumps(data))

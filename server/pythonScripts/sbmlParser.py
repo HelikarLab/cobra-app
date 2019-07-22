@@ -52,10 +52,11 @@ for g in range(len(model.genes)):
 
 data = {
         "name": model.name,
+        "filename": sys.argv[1],
         "id": model.id,
         "metabolites": metabolitesData,
         "reactions": reactionData,
-        "genes": genesData
+        "genes": genesData,
 }
 
 print(json.dumps(data))

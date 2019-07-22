@@ -9,9 +9,9 @@ function FluxResults(props){
             return (
                 <tr data-div_id={reaction.id}
                     key={reaction.id}>
-                    <td style={{width: "15%"}} >{reaction.id}</td>
-                    <td style={{width: "85%"}} >{reaction.flux}
-                    </td>
+                    <td >{reaction.id}</td>
+                    <td >{reaction.minimum}</td>
+                    <td >{reaction.minimum}</td>
                 </tr>)
         });
 
@@ -31,8 +31,9 @@ function FluxResults(props){
                     <Table borderless>
                         <thead>
                         <tr >
-                            <th style={{width: "15%"}}>Reaction Id</th>
-                            <th style={{width: "85%"}}>Flux Values</th>
+                            <th >Reaction Id</th>
+                            <th >Minimum Flux Values</th>
+                            <th >Maximum Flux Values</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -3,7 +3,7 @@ import { CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
 
-class FluxControlForFBA extends React.Component{
+class FluxControlForEssentiality extends React.Component{
 
     constructor(props){
         super(props);
@@ -167,7 +167,7 @@ class FluxControlForFBA extends React.Component{
                             </tr>
                             </thead>
                             <tbody>
-                                    {tableData}
+                            {tableData}
                             </tbody>
                         </Table>
                     </div>
@@ -182,4 +182,4 @@ class FluxControlForFBA extends React.Component{
 }
 
 
-export default FluxControlForFBA
+export default FluxControlForEssentiality

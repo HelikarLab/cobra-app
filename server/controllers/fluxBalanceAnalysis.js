@@ -2,7 +2,8 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 
 module.exports = async function (req, res) {
-    console.log(req.fields)
+    const file= (Object.values(req.fields)[1])
+
     try {
         fs.writeFile("./analysis/modelForFBA.json", Object.values(req.fields)[0], function (err) {
                 if (err) throw err;
@@ -11,7 +12,7 @@ module.exports = async function (req, res) {
         );
 
         const options = {
-            args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
+            args: [`./uploads/${file}`, Object.values(req.fields)[0]]
         };
 
         PythonShell.run('pythonScripts/fluxBalanceAnalysis.py', options, function (err, data) {

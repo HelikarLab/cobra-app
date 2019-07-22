@@ -8,11 +8,10 @@ module.exports = async function(req, res) {
     fs.mkdirSync('./uploads')
   }
 
-  const fileName = 'sbmlFile';
-  fs.renameSync(file.path, `./uploads/${fileName}`);
+  fs.renameSync(file.path, `./uploads/${file.name}`);
 
   const options = {
-    args: [fileName],
+    args: [file.name],
   };
 
   PythonShell.run('pythonScripts/sbmlParser.py', options, function(err, data) {

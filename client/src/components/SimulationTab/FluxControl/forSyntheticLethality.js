@@ -3,20 +3,39 @@ import { CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
 
-class FluxControlForFBA extends React.Component{
+class FluxControlForSL extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
             checkedItems: new Map(),
             reactions : null,
-            updatedReactions: null
+            updatedReactions: null,
+            knockedOutReactions: [],
         };
         this.handleChangeReactions = this.handleChangeReactions.bind(this);
         this.handleChangeKnockOut= this.handleChangeKnockOut.bind(this);
     }
 
     handleChangeKnockOut = (params,id) => e => {
+
+        console.log("inside knockedout")
+
+        const knockedOut = this.state.knockedOutReactions;
+        let k;
+        let flagk=0;
+        for(k=0;k<knockedOut.length;k++){
+            if(id===knockedOut[k].id){
+                knockedOut.splice(k,1);
+                k--;
+                flagk=1;
+            }
+        }
+        if(flagk===0){
+            knockedOut.push({
+                "id": id
+            })
+        }
 
         const item = e.target.name;
         const isChecked = e.target.checked;
@@ -46,13 +65,15 @@ class FluxControlForFBA extends React.Component{
         }
 
         this.setState({
-            updatedReactions : updated
+            updatedReactions : updated,
+            knockedOutReactions: knockedOut
         });
 
     };
 
 
     handleChangeReactions = (param,id) => event =>{
+
         const array = this.state.reactions;
         array[param].lower_bound = event.min;
         array[param].upper_bound = event.max;
@@ -102,7 +123,8 @@ class FluxControlForFBA extends React.Component{
         if(prevProps.reactions !== this.props.reactions){
             this.setState({
                 reactions: this.props.reactions,
-                updatedReactions: this.props.updatedReactions
+                updatedReactions: this.props.updatedReactions,
+                knockedOutReactions: this.props.knockedOutReactions
             });
         }
 
@@ -167,7 +189,7 @@ class FluxControlForFBA extends React.Component{
                             </tr>
                             </thead>
                             <tbody>
-                                    {tableData}
+                            {tableData}
                             </tbody>
                         </Table>
                     </div>
@@ -182,4 +204,4 @@ class FluxControlForFBA extends React.Component{
 }
 
 
-export default FluxControlForFBA
+export default FluxControlForSL

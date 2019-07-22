@@ -148,6 +148,8 @@ const model = {
     simulationTab: {
         updatedReactions : [],
         updatedGenes : [],
+        knockedOutReactions: [],
+        knockedOutGenes: [],
         metabolitesFromModel: [],
         metabolites: null,
         reactions: null,
@@ -156,7 +158,8 @@ const model = {
         currentFBAModel: {},
         currentFVAModel : {},
         currentEssentialityModel : {},
-        currentSyntheticLethalityModel : {},
+        currentSyntheticLethalityModel : {
+        },
 /*        graphData: computed(state => {
             return state.resultData.filter(item => {
                 if (item.checked) return true
@@ -167,6 +170,7 @@ const model = {
         runFluxBalanceAnalysis : thunk((actions, payload)=>{
             const formData = new FormData();
             formData.append('model', JSON.stringify(payload));
+            formData.append('file',payload.filename)
             axios({
                 method: 'post',
                 url: `${API_URL}/api/model/id/fba/optimize`,
@@ -175,7 +179,6 @@ const model = {
                 .then(res=> {
                     const json = JSON.parse(res.data);
                     actions.setCurrentFBAModel(json);
-                    console.log(json)
                 })
                 .catch(err=>console.log(err))
         }),
@@ -188,6 +191,7 @@ const model = {
                 data : formData
             })
                 .then(res=> {
+                    console.log(res.data[0])
                     const json = JSON.parse(res.data);
                     actions.setCurrentFVAModel(json);
                 })

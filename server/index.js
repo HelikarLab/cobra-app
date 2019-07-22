@@ -48,7 +48,7 @@ const connectDb = async (retries = 5) => {
       .authenticate()
       .then(() => {
         console.log('Database connected...')
-        db.sync({ force: true })
+        //db.sync({ force: true })
         retries = 0
       })
       .catch(async err => {

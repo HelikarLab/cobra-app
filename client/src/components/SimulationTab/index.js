@@ -11,11 +11,26 @@ import FluxResults from "./FluxResults";
 import EssentialComponents from "./Essential Components";
 import FluxControlForFVA from "./FluxControl/forFVA";
 import GeneControlForFVA from "./GeneControl/forFVA";
+import FluxControlForSL from "./FluxControl/forSyntheticLethality";
+import { notification } from 'antd';
+import 'antd/dist/antd.css';
+import FluxControlForEssentiality from "./FluxControl/forEssentiality";
 
 
 function SimulationTab() {
 
+    const openNotificationWithIcon = type => {
+        notification[type]({
+            message: 'Error! ',
+            description:
+                'For Synthetic Lethality, you can only knockout 2 reactions or 2 genes!',
+        });
+    };
+
+
     const [activeTab, toggle] = React.useState( 1);
+
+    const filename = useStoreState(state => state.modelTab.currentModel.filename);
 
     const {reactions,genes }= useStoreState( state => state.modelTab.currentModel);
     const {updatedReactions, updatedGenes} = useStoreState( state => state.simulationTab);
@@ -32,16 +47,21 @@ function SimulationTab() {
     const analysisFVAName = useStoreState(state=>state.simulationTab.currentFVAModel.name);
     const analysisFVAInfo = useStoreState(state=> state.simulationTab.currentFVAModel.objective_value);
 
+    const knockedOutReactions = useStoreState(state=>state.simulationTab.knockedOutReactions);
+    const knockedOutGenes = useStoreState(state=>state.simulationTab.knockedOutGenes);
+
     const {runFluxBalanceAnalysis,runFluxVariabilityAnalysis,runEssentiality,runSyntheticLethality}=useStoreActions(actions => actions.simulationTab)
 
     function runFBA(e) {
         e.preventDefault();
         runFluxBalanceAnalysis({
+                filename: filename,
                 reactions: updatedReactions,
                 genes: updatedGenes
             })
     }
     function runFVA(e) {
+        console.log(updatedReactions)
         e.preventDefault();
         runFluxVariabilityAnalysis({
             reactions: updatedReactions,
@@ -56,9 +76,16 @@ function SimulationTab() {
     }
     function runSyntheticLethalityFunction(e) {
         e.preventDefault();
-        runSyntheticLethality({
-            str: "syntheticlethality"
-        })
+        console.log(knockedOutReactions);
+        if(knockedOutReactions.length>2){
+            openNotificationWithIcon('error')
+        }
+        else{
+            runSyntheticLethality({
+                reactions: updatedReactions,
+                genes: updatedGenes
+            })
+        }
     }
     return(
         <React.Fragment>
@@ -110,9 +137,6 @@ function SimulationTab() {
                                             color="success" style={{position: "absolute",left: "25%"}}>Run the Simulation >
                                         </Button></h3>
                                         <br/><hr/>
-                                        {
-                                            console.log(info)
-                                        }
                                         <AnalysisInfo name={name} info={info}/>
                                         <FluxResults
                                             height={"450px"}
@@ -200,10 +224,10 @@ function SimulationTab() {
                                         BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControlForFBA
+                                        <FluxControlForEssentiality
                                             height={"750px"}
                                             knockOff={true}
-                                            // updatedReactions={updatedReactions}
+                                            updatedReactions={updatedReactions}
                                             reactions={reactions}
                                         />
                                     </Col>
@@ -236,10 +260,11 @@ function SimulationTab() {
                                         BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS AND GENES JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControlForFBA
+                                        <FluxControlForSL
                                             knockOff={true}
                                             height={"325px"}
-                                            // updatedReactions={updatedReactions}
+                                            knockedOutReactions={knockedOutReactions}
+                                            updatedReactions={updatedReactions}
                                             reactions={reactions}
                                         />
                                     </Col>
@@ -250,7 +275,7 @@ function SimulationTab() {
                                     </Col>
                                     <Col md="8">
                                         <GeneControlForFBA
-                                            // updatedGenes={updatedGenes}
+                                            updatedGenes={updatedGenes}
                                             genes={genes}/>
                                     </Col>
                                 </Row>
