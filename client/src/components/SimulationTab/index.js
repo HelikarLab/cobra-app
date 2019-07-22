@@ -7,7 +7,7 @@ import SimulationGraph from "./SimulationGraph";
 import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 import AnalysisInfo from "./AnalysisInfo";
-import FluxResults from "./FluxResults";
+import FluxResultsForFBA from "./FluxResults/forFBA";
 import EssentialComponents from "./Essential Components";
 import FluxControlForFVA from "./FluxControl/forFVA";
 import GeneControlForFVA from "./GeneControl/forFVA";
@@ -15,6 +15,7 @@ import FluxControlForSL from "./FluxControl/forSyntheticLethality";
 import { notification } from 'antd';
 import 'antd/dist/antd.css';
 import FluxControlForEssentiality from "./FluxControl/forEssentiality";
+import FluxResultsForFVA from "./FluxResults/forFVA";
 
 
 function SimulationTab() {
@@ -138,7 +139,7 @@ function SimulationTab() {
                                         </Button></h3>
                                         <br/><hr/>
                                         <AnalysisInfo name={name} info={info}/>
-                                        <FluxResults
+                                        <FluxResultsForFBA
                                             height={"450px"}
                                             updatedReactions={analysisReactions}/>
                                     </Col>
@@ -200,7 +201,7 @@ function SimulationTab() {
                                 </Row>
                             </Col>
                             <Col md="5" >
-                                <FluxResults
+                                <FluxResultsForFVA
                                     height={"750px"}
                                     updatedReactions={analysisFVAReactions}/>
                             </Col>

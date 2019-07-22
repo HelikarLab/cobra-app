@@ -2,7 +2,7 @@ import React from 'react'
 import {Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 
-function FluxResults(props){
+function FluxResultsForFBA(props){
 
     if (props.updatedReactions) {
         const tableData = props.updatedReactions.map((reaction,index) => {
@@ -10,8 +10,7 @@ function FluxResults(props){
                 <tr data-div_id={reaction.id}
                     key={reaction.id}>
                     <td >{reaction.id}</td>
-                    <td >{reaction.minimum}</td>
-                    <td >{reaction.minimum}</td>
+                    <td >{reaction.flux}</td>
                 </tr>)
         });
 
@@ -32,8 +31,7 @@ function FluxResults(props){
                         <thead>
                         <tr >
                             <th >Reaction Id</th>
-                            <th >Minimum Flux Values</th>
-                            <th >Maximum Flux Values</th>
+                            <th >Flux Values</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,4 +49,4 @@ function FluxResults(props){
 }
 
 
-export default FluxResults
+export default FluxResultsForFBA

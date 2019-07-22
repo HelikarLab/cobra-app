@@ -5,6 +5,8 @@ import { Icon } from 'react-icons-kit'
 import { infoCircle } from 'react-icons-kit/fa/infoCircle'
 import GraphLegend from './GraphLegend'
 import './style.scss'
+import { Slider } from 'antd';
+
 
 class Graph extends React.Component {
     constructor(props) {
@@ -14,12 +16,22 @@ class Graph extends React.Component {
             nodes: [],
             edges: [],
             compartments: [],
+            sliderValue: [-50,50],
             currentCompartment : null,
             dropdownOpen: false
         };
         this.toggle = this.toggle.bind(this);
         this.selectCompartment = this.selectCompartment.bind(this);
     }
+
+    sliderChange = value =>{
+        this.setState({
+            sliderValue: value
+        })
+        console.log(this.state.sliderValue[0])
+        console.log(this.state.sliderValue[1])
+    };
+
 
     toggle() {
         this.setState(prevState => ({
@@ -360,6 +372,7 @@ class Graph extends React.Component {
         if ( this.props.reactions && this.props.metabolites &&
             (prevProps.reactions !== this.props.reactions ||
             prevProps.metabolites !== this.props.metabolites ||
+            prevState.sliderValue !== this.state.sliderValue ||
             prevState.currentCompartment !== this.state.currentCompartment))
         {
 
@@ -372,7 +385,15 @@ class Graph extends React.Component {
 
                 const {metabolites} = this.props;
 
-                let reactionNodes = this.generateReactionNodes(this.props.reactions);
+                let filteredReactions = [];
+
+                for(let i=0; i<this.props.reactions.length;i++){
+                    if(this.props.reactions[i].flux>=this.state.sliderValue[0] && this.props.reactions[i].flux<=this.state.sliderValue[1]){
+                        filteredReactions.push(this.props.reactions[i]);
+                    }
+                }
+
+                let reactionNodes = this.generateReactionNodes(filteredReactions);
                 let nodes = [];
                 for (let i = 0; i < metabolites.length; i++) {
                     nodes.push({label: metabolites[i].id})
@@ -380,9 +401,9 @@ class Graph extends React.Component {
                 reactionNodes.map(node => {
                     return nodes.push(node)
                 });
-                let edges = this.generateReactionEdges(this.props.reactions, nodes);
+                let edges = this.generateReactionEdges(filteredReactions, nodes);
                 this.setState({nodes: nodes,edges: edges},function generateGraph() {
-                    if (prevState !== this.state) {
+                    if (prevState !== this.state || this.state.sliderValue!==prevState.sliderValue) {
                         const nodes = this.state.nodes;
                         const edges = this.state.edges;
                         this.self.set(nodes, edges, 'force');
@@ -400,11 +421,21 @@ class Graph extends React.Component {
                 // Code to filter the compartments
                 let filteredMetabolites = [];
                 let filteredReactions = [];
-                for (let i = 0; i < this.props.reactions.length; i++) {
-                    if (this.props.reactions[i].compartments === this.state.currentCompartment) {
-                        filteredReactions.push(this.props.reactions[i]);
+
+                let boundedReaction = [];
+
+                for(let i=0; i<this.props.reactions.length;i++){
+                    if(this.props.reactions[i].flux>=this.state.sliderValue[0] && this.props.reactions[i].flux<=this.state.sliderValue[1]){
+                        boundedReaction.push(this.props.reactions[i]);
                     }
                 }
+
+                for (let i = 0; i < boundedReaction.length; i++) {
+                    if (boundedReaction[i].compartments === this.state.currentCompartment) {
+                        filteredReactions.push(boundedReaction[i]);
+                    }
+                }
+
                 for (let i = 0; i < metabolites.length; i++) {
                     if (metabolites[i].compartment === this.state.currentCompartment) {
                         filteredMetabolites.push(metabolites[i]);
@@ -495,7 +526,9 @@ class Graph extends React.Component {
                     </div> : null
                     }
                 </h3>
-                <canvas ref="graph" width="760" height="720" className="graph-canvas" />
+                <canvas ref="graph" width="760" height="700" className="graph-canvas" />
+                <br/><br/>
+                <Slider range defaultValue={[-50, 50]} min={-100} max={100} onChange={this.sliderChange} tooltipVisible/>
             </div>
         )
     }
