@@ -528,7 +528,7 @@ class Graph extends React.Component {
                 </h3>
                 <canvas ref="graph" width="760" height="700" className="graph-canvas" />
                 <br/><br/>
-                <Slider range defaultValue={[-50, 50]} min={-100} max={100} onChange={this.sliderChange} tooltipVisible/>
+                <Slider range defaultValue={[-50, 50]} min={-100} max={100} onChange={this.sliderChange} />
             </div>
         )
     }

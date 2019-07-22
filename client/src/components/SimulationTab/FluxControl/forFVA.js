@@ -2,6 +2,7 @@ import React from 'react'
 import {CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
+import {Slider} from "antd";
 
 class FluxControlForFVA extends React.Component{
 
@@ -119,6 +120,7 @@ class FluxControlForFVA extends React.Component{
 
                         <td >{reaction.id}</td>
                         <td >
+
                             <InputRange
                                 minValue={this.state.reactions[index].min}
                                 maxValue={this.state.reactions[index].max}

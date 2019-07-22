@@ -36,8 +36,8 @@ function SimulationTab() {
     const {reactions,genes }= useStoreState( state => state.modelTab.currentModel);
     const {updatedReactions, updatedGenes} = useStoreState( state => state.simulationTab);
 
-    const currentFVAReactions = useStoreState( state => state.modelTab.currentModel.reactions);
-    const currentFVAGenes= useStoreState( state => state.modelTab.currentModel.genes);
+    const currentFVAReactions = useStoreState( state => state.modelTab.currentAnalysisModel.reactions);
+    const currentFVAGenes= useStoreState( state => state.modelTab.currentAnalysisModel.genes);
 
     const analysisMetabolites = useStoreState(state => state.simulationTab.currentFBAModel.metabolites);
     const analysisReactions = useStoreState(state => state.simulationTab.currentFBAModel.reactions);
