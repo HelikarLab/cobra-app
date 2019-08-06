@@ -1,5 +1,5 @@
 import React from 'react'
-import NetViz from 'ccnetviz'
+import ccNetViz from 'ccnetviz'
 import { UncontrolledTooltip, Dropdown,DropdownItem,DropdownMenu,DropdownToggle } from 'reactstrap'
 import { Icon } from 'react-icons-kit'
 import { infoCircle } from 'react-icons-kit/fa/infoCircle'
@@ -105,9 +105,7 @@ class Graph extends React.Component {
 
   componentDidMount(prevState, prevProps) {
 
-
-
-    this.self = new NetViz(this.refs.graph, {
+    this.graph = new ccNetViz(this.refs.graph, {
       styles: {
         background: {
           color: 'rgb(255, 255, 255)',
@@ -116,7 +114,7 @@ class Graph extends React.Component {
           minSize: 6,
           maxSize: 16,
           color: 'rgb(47, 109, 206)',
-          texture: require('../../../assets/circle.png'),
+          texture: require('../../../../assets/circle.png'),
           label: {
             hideSize: 16,
             color: 'rgb(0, 0, 0)',
@@ -129,7 +127,7 @@ class Graph extends React.Component {
             minSize: 1,
             maxSize: 16,
             aspect: 1,
-            texture: require('../../../assets/arrow.png'),
+            texture: require('../../../../assets/arrow.png'),
             hideSize: 1,
           },
           type: 'line',
@@ -180,11 +178,9 @@ class Graph extends React.Component {
 
 
       this.setState({nodes: nodes,edges: edges},function generateGraph() {
-          const nodes = this.state.nodes;
-          const edges = this.state.edges;
-          this.self.set(nodes, edges, 'force');
-          this.self.draw()
-
+        this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+          this.graph.draw()
+        })
       });
     }
 
@@ -220,10 +216,9 @@ class Graph extends React.Component {
         let edges = this.generateReactionEdges(this.props.reactions, nodes);
         this.setState({nodes: nodes,edges: edges},function generateGraph() {
           if (prevState !== this.state) {
-            const nodes = this.state.nodes;
-            const edges = this.state.edges;
-            this.self.set(nodes, edges, 'force');
-            this.self.draw()
+            this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+              this.graph.draw()
+            })
           }
         });
 
@@ -260,11 +255,9 @@ class Graph extends React.Component {
         let edges = this.generateReactionEdges(filteredReactions, nodes);
         this.setState({nodes: nodes,edges: edges},function generateGraph() {
           if (prevState !== this.state) {
-
-            const nodes = this.state.nodes;
-            const edges = this.state.edges;
-            this.self.set(nodes, edges, 'force');
-            this.self.draw()
+            this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+              this.graph.draw()
+            })
           }
         });
       }
@@ -281,16 +274,17 @@ class Graph extends React.Component {
     return (
       <div>
         <h3 className="text-muted">
-          Graph{` `}
-          <Icon icon={infoCircle} id="graph-legend-info" />
-          <UncontrolledTooltip placement="right" target="graph-legend-info">
-            <GraphLegend />
-          </UncontrolledTooltip>
           {this.props.reactions?<div>
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              Graph{` `}
+              <Icon icon={infoCircle} id="graph-legend-info" />
+              <UncontrolledTooltip placement="right" target="graph-legend-info">
+                <GraphLegend />
+              </UncontrolledTooltip> &nbsp;
               <DropdownToggle caret>
                 Compartments
-              </DropdownToggle>
+              </DropdownToggle> &nbsp;
+              <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
               <DropdownMenu>
                 <DropdownItem
                     onClick={
@@ -311,7 +305,6 @@ class Graph extends React.Component {
                 }
               </DropdownMenu>
             </Dropdown>
-          <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
           </div> : null
           }
         </h3>

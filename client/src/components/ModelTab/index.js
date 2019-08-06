@@ -1,7 +1,6 @@
 import React from 'react'
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody } from 'reactstrap'
-import Graph from './ModelGraph'
 import ReactionsList from './ReactionsList'
 import MetabolitesList from './MetabolitesList'
 import InfoPanel from './InfoPanel'
@@ -9,15 +8,14 @@ import GenesList from "./GenesList";
 import ModelMetaData from "./ModelMetaData";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import Visualisation from './Visualisation'
 
 function ModelTab() {
     const [type, setType] = React.useState('');
     const [info, setInfo] = React.useState({});
     const [modal, setModal] = React.useState(false)
 
-    const { reactions, metabolites, genes,name } = useStoreState(
-        state => state.modelTab.currentModel
-    );
+    const { reactions, metabolites, genes,name } = useStoreState(state => state.modelTab.currentModel);
     const saveModel = useStoreActions(actions => actions.modelTab.saveModel)
 
     return (
@@ -47,7 +45,7 @@ function ModelTab() {
             </Modal>
             <Row style={{ padding: 20 }}>
                 <Col md="4">
-                    <Graph reactions={reactions} metabolites={metabolites} />
+                    <Visualisation />
                     <ModelMetaData data={name} />
                     <Row style={{ marginTop: 30 }}>
                         <Col>

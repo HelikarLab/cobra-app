@@ -1,12 +1,11 @@
 import React from 'react'
-import NetViz from 'ccnetviz'
+import ccNetViz from 'ccnetviz'
 import { UncontrolledTooltip, Dropdown,DropdownItem,DropdownMenu,DropdownToggle } from 'reactstrap'
 import { Icon } from 'react-icons-kit'
 import { infoCircle } from 'react-icons-kit/fa/infoCircle'
 import GraphLegend from './GraphLegend'
 import './style.scss'
-import { Slider } from 'antd';
-
+import InputRange from 'react-input-range'
 
 class Graph extends React.Component {
     constructor(props) {
@@ -16,22 +15,13 @@ class Graph extends React.Component {
             nodes: [],
             edges: [],
             compartments: [],
-            sliderValue: [-50,50],
             currentCompartment : null,
-            dropdownOpen: false
+            dropdownOpen: false,
+            value: { min: -50, max: 50 }
         };
         this.toggle = this.toggle.bind(this);
         this.selectCompartment = this.selectCompartment.bind(this);
     }
-
-    sliderChange = value =>{
-        this.setState({
-            sliderValue: value
-        })
-        console.log(this.state.sliderValue[0])
-        console.log(this.state.sliderValue[1])
-    };
-
 
     toggle() {
         this.setState(prevState => ({
@@ -265,7 +255,7 @@ class Graph extends React.Component {
 
     componentDidMount(prevState) {
 
-        this.self = new NetViz(this.refs.graph, {
+        this.graph = new ccNetViz(this.refs.graph, {
             styles: {
                 background: {
                     color: 'rgb(255, 255, 255)',
@@ -274,7 +264,7 @@ class Graph extends React.Component {
                     minSize: 6,
                     maxSize: 16,
                     color: 'rgb(47, 109, 206)',
-                    texture: require('../../../assets/circle.png'),
+                    texture: require('../../../../assets/circle.png'),
                     label: {
                         hideSize: 16,
                         color: 'rgb(0, 0, 0)',
@@ -287,7 +277,7 @@ class Graph extends React.Component {
                         minSize: 1,
                         maxSize: 16,
                         aspect: 1,
-                        texture: require('../../../assets/arrow.png'),
+                        texture: require('../../../../assets/arrow.png'),
                         hideSize: 1,
                     },
                     type: 'line',
@@ -358,11 +348,9 @@ class Graph extends React.Component {
 
 
             this.setState({nodes: nodes,edges: edges},function generateGraph() {
-                const nodes = this.state.nodes;
-                const edges = this.state.edges;
-                this.self.set(nodes, edges, 'force');
-                this.self.draw()
-
+                this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+                    this.graph.draw()
+                })
             });
         }
     }
@@ -372,7 +360,7 @@ class Graph extends React.Component {
         if ( this.props.reactions && this.props.metabolites &&
             (prevProps.reactions !== this.props.reactions ||
             prevProps.metabolites !== this.props.metabolites ||
-            prevState.sliderValue !== this.state.sliderValue ||
+            prevState.value !== this.state.value ||
             prevState.currentCompartment !== this.state.currentCompartment))
         {
 
@@ -388,7 +376,7 @@ class Graph extends React.Component {
                 let filteredReactions = [];
 
                 for(let i=0; i<this.props.reactions.length;i++){
-                    if(this.props.reactions[i].flux>=this.state.sliderValue[0] && this.props.reactions[i].flux<=this.state.sliderValue[1]){
+                    if(this.props.reactions[i].flux>=this.state.value.min && this.props.reactions[i].flux<=this.state.value.max){
                         filteredReactions.push(this.props.reactions[i]);
                     }
                 }
@@ -403,11 +391,10 @@ class Graph extends React.Component {
                 });
                 let edges = this.generateReactionEdges(filteredReactions, nodes);
                 this.setState({nodes: nodes,edges: edges},function generateGraph() {
-                    if (prevState !== this.state || this.state.sliderValue!==prevState.sliderValue) {
-                        const nodes = this.state.nodes;
-                        const edges = this.state.edges;
-                        this.self.set(nodes, edges, 'force');
-                        this.self.draw()
+                    if (prevState !== this.state || this.state.value!==prevState.value) {
+                        this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+                            this.graph.draw()
+                        })
                     }
                 });
 
@@ -425,7 +412,7 @@ class Graph extends React.Component {
                 let boundedReaction = [];
 
                 for(let i=0; i<this.props.reactions.length;i++){
-                    if(this.props.reactions[i].flux>=this.state.sliderValue[0] && this.props.reactions[i].flux<=this.state.sliderValue[1]){
+                    if(this.props.reactions[i].flux>=this.state.value.min && this.props.reactions[i].flux<=this.state.value.max){
                         boundedReaction.push(this.props.reactions[i]);
                     }
                 }
@@ -471,11 +458,9 @@ class Graph extends React.Component {
 
                 this.setState({nodes: nodes,edges: edges},function generateGraph() {
                     if (prevState !== this.state) {
-
-                        const nodes = this.state.nodes;
-                        const edges = this.state.edges;
-                        this.self.set(nodes, edges, 'force');
-                        this.self.draw()
+                        this.graph.set(this.state.nodes, this.state.edges, 'force').then(() => {
+                            this.graph.draw()
+                        })
                     }
                 });
             }
@@ -492,16 +477,18 @@ class Graph extends React.Component {
         return (
             <div>
                 <h3 className="text-muted">
-                    Graph{` `}
-                    <Icon icon={infoCircle} id="graph-legend-info" />
-                    <UncontrolledTooltip placement="right" target="graph-legend-info">
-                        <GraphLegend />
-                    </UncontrolledTooltip>
-                    {this.props.reactions?<div>
+                    {this.props.reactions?
+                        <div>
                         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                            Graph{` `}
+                            <Icon icon={infoCircle} id="graph-legend-info" />
+                            <UncontrolledTooltip placement="right" target="graph-legend-info">
+                                <GraphLegend />
+                            </UncontrolledTooltip> &nbsp;
                             <DropdownToggle caret>
                                 Compartments
-                            </DropdownToggle>
+                            </DropdownToggle> &nbsp;
+                            <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
                             <DropdownMenu>
                                 <DropdownItem
                                     onClick={
@@ -522,13 +509,18 @@ class Graph extends React.Component {
                                 }
                             </DropdownMenu>
                         </Dropdown>
-                        <h5>Current Compartment: {(this.state && this.state.currentCompartment) ===null ? "'All'" : (this.state.currentCompartment)}</h5>
                     </div> : null
                     }
                 </h3>
-                <canvas ref="graph" width="760" height="700" className="graph-canvas" />
+                <canvas ref="graph" width="760" height="680" className="graph-canvas" />
                 <br/><br/>
-                <Slider range defaultValue={[-50, 50]} min={-100} max={100} onChange={this.sliderChange} />
+                <div style={{marginRight: "20px"}}>
+                    <InputRange
+                        minValue={-100}
+                        maxValue={100}
+                        value={this.state.value}
+                        onChange={value => this.setState({ value })} />
+                </div>
             </div>
         )
     }

@@ -2,8 +2,9 @@ import React from 'react'
 import { CustomInput, Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
 import InputRange from 'react-input-range'
+import { Switch } from 'antd'
 
-class FluxControlForSL extends React.Component{
+class FluxControl extends React.Component{
 
     constructor(props){
         super(props);
@@ -18,8 +19,6 @@ class FluxControlForSL extends React.Component{
     }
 
     handleChangeKnockOut = (params,id) => e => {
-
-        console.log("inside knockedout")
 
         const knockedOut = this.state.knockedOutReactions;
         let k;
@@ -37,13 +36,13 @@ class FluxControlForSL extends React.Component{
             })
         }
 
-        const item = e.target.name;
-        const isChecked = e.target.checked;
+        const item = id;
+        const isChecked = e;
         this.setState(
-            prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked)}),
+          prevState => ({ checkedItems: prevState.checkedItems.set(item, isChecked)}),
         );
         const array = this.state.reactions;
-        array[params].functional = !e.target.checked;
+        array[params].functional = !e;
         this.setState({
             reactions: array
         });
@@ -53,14 +52,14 @@ class FluxControlForSL extends React.Component{
         let flag=0;
         for(i=0;i<updated.length;i++){
             if(id===updated[i].id){
-                updated[i].functional = !e.target.checked;
+                updated[i].functional = !e;
                 flag=1;
             }
         }
         if(flag===0) {
             updated.push({
                 "id": id,
-                "functional": !e.target.checked
+                "functional": !e
             });
         }
 
@@ -118,6 +117,9 @@ class FluxControlForSL extends React.Component{
                 reactions: nextProps.reactions
             });
         }
+        this.setState({
+            checkedItems: new Map()
+        })
     }
     componentDidUpdate(prevProps,prevState) {
         if(prevProps.reactions !== this.props.reactions){
@@ -134,67 +136,67 @@ class FluxControlForSL extends React.Component{
         if (this.state.reactions && this.props.reactions) {
             const tableData = this.props.reactions.map((reaction,index) => {
                 return (
-                    <tr data-div_id={reaction.id}
-                        key={reaction.id}>
-                        <td >{reaction.id}</td>
-                        <td >
-                            <InputRange
-                                minValue={this.state.reactions[index].min}
-                                maxValue={this.state.reactions[index].max}
-                                value={{
-                                    min : this.state.reactions[index].lower_bound,
-                                    max: this.state.reactions[index].upper_bound
-                                }}
-                                onChange={this.handleChangeReactions(index,reaction.id)} />
-                        </td>
-                        {
-                            this.props.knockOff ?
-                                <td>
-                                    <label key={reaction.id} style={{float: "right"}}>
-                                        <CustomInput type="switch" id={reaction.id} name={reaction.id}  checked={this.state.checkedItems.get(reaction.id)} onChange={this.handleChangeKnockOut(index,reaction.id)}/>
-                                    </label>
-                                </td>           :
-                                null
-                        }
-                    </tr>)
+                  <tr data-div_id={reaction.id}
+                      key={reaction.id}>
+                      <td >{reaction.id}</td>
+                      <td >
+                          <InputRange
+                            minValue={this.state.reactions[index].min}
+                            maxValue={this.state.reactions[index].max}
+                            value={{
+                                min : this.state.reactions[index].lower_bound,
+                                max: this.state.reactions[index].upper_bound
+                            }}
+                            onChange={this.handleChangeReactions(index,reaction.id)} />
+                      </td>
+                      {
+                          this.props.knockOff ?
+                            <td style={{padding: "5px"}}>
+                                <label key={reaction.id} style={{float: "right"}}>
+                                    <Switch id={reaction.id} name={reaction.id} size="small" checked={this.state.checkedItems.get(reaction.id)} onChange={this.handleChangeKnockOut(index,reaction.id)}/>
+                                </label>
+                            </td>           :
+                            null
+                      }
+                  </tr>)
             });
 
 
             return (
-                <div style={{borderBottom: "1px solid #adadad"}}>
-                    <h3 >Flux Control &nbsp;
-                    </h3>
-                    <hr/>
-                    <div style={{
-                        height: this.props.height,
-                        overflowY: 'scroll',
-                        overflowX: 'none',
-                        borderRight: "1px solid #adadad",
-                        borderLeft: "1px solid #adadad"
-                    }}>
-                        <Table borderless>
-                            <thead>
-                            <tr >
-                                <th >Id</th>
-                                <th >
-                                    Flux Control
-                                </th>
-                                {
-                                    this.props.knockOff?
-                                        <th>
-                                            KnockOut?
-                                        </th>           :
-                                        null
-                                }
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {tableData}
-                            </tbody>
-                        </Table>
-                    </div>
+              <div style={{borderBottom: "1px solid #adadad"}}>
+                  <h3 >Flux Control &nbsp;
+                  </h3>
+                  <hr/>
+                  <div style={{
+                      height: this.props.height,
+                      overflowY: 'scroll',
+                      overflowX: 'none',
+                      borderRight: "1px solid #adadad",
+                      borderLeft: "1px solid #adadad"
+                  }}>
+                      <Table borderless>
+                          <thead>
+                          <tr >
+                              <th >Id</th>
+                              <th >
+                                  Flux Control
+                              </th>
+                              {
+                                  this.props.knockOff?
+                                    <th>
+                                        KnockOut?
+                                    </th>           :
+                                    null
+                              }
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {tableData}
+                          </tbody>
+                      </Table>
+                  </div>
 
-                </div>
+              </div>
             )
         } else {
             return <div>
@@ -204,4 +206,4 @@ class FluxControlForSL extends React.Component{
 }
 
 
-export default FluxControlForSL
+export default FluxControl

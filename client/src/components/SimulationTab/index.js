@@ -1,21 +1,19 @@
 import React from 'react'
-import { Row, Col, Button} from 'reactstrap'
+import { Row, Col, Button, ListGroupItem } from 'reactstrap'
 import {useStoreState, useStoreActions} from "easy-peasy";
-import FluxControlForFBA from "./FluxControl/forFBA";
-import GeneControlForFBA from "./GeneControl/forFBA";
-import SimulationGraph from "./SimulationGraph";
+import GeneControl from "./GeneControl/index";
 import { TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 import AnalysisInfo from "./AnalysisInfo";
 import FluxResultsForFBA from "./FluxResults/forFBA";
-import EssentialComponents from "./Essential Components";
-import FluxControlForFVA from "./FluxControl/forFVA";
-import GeneControlForFVA from "./GeneControl/forFVA";
-import FluxControlForSL from "./FluxControl/forSyntheticLethality";
-import { notification } from 'antd';
-import 'antd/dist/antd.css';
-import FluxControlForEssentiality from "./FluxControl/forEssentiality";
 import FluxResultsForFVA from "./FluxResults/forFVA";
+import EssentialComponents from "./Essential Components";
+import { Alert, notification } from 'antd'
+import 'antd/dist/antd.css';
+import FluxControl from "./FluxControl";
+import {cloneDeep} from "lodash";
+import Visualisation from './Visualisation'
+import { toast } from 'react-toastify'
 
 
 function SimulationTab() {
@@ -28,7 +26,6 @@ function SimulationTab() {
         });
     };
 
-
     const [activeTab, toggle] = React.useState( 1);
 
     const filename = useStoreState(state => state.modelTab.currentModel.filename);
@@ -36,22 +33,21 @@ function SimulationTab() {
     const {reactions,genes }= useStoreState( state => state.modelTab.currentModel);
     const {updatedReactions, updatedGenes} = useStoreState( state => state.simulationTab);
 
-    const currentFVAReactions = useStoreState( state => state.modelTab.currentAnalysisModel.reactions);
-    const currentFVAGenes= useStoreState( state => state.modelTab.currentAnalysisModel.genes);
-
-    const analysisMetabolites = useStoreState(state => state.simulationTab.currentFBAModel.metabolites);
     const analysisReactions = useStoreState(state => state.simulationTab.currentFBAModel.reactions);
-    const analysisGenes = useStoreState(state => state.simulationTab.currentFBAModel.genes);
     const name = useStoreState(state => state.simulationTab.currentFBAModel.name);
     const info = useStoreState(state=> state.simulationTab.currentFBAModel.objective_value);
     const analysisFVAReactions = useStoreState(state=> state.simulationTab.currentFVAModel.reactions);
     const analysisFVAName = useStoreState(state=>state.simulationTab.currentFVAModel.name);
     const analysisFVAInfo = useStoreState(state=> state.simulationTab.currentFVAModel.objective_value);
+    const analysisEssentialityReactions = useStoreState(state => state.simulationTab.currentEssentialityModel.essentialReactions)
+    const analysisEssentialityGenes= useStoreState(state => state.simulationTab.currentEssentialityModel.essentialGenes)
 
     const knockedOutReactions = useStoreState(state=>state.simulationTab.knockedOutReactions);
-    const knockedOutGenes = useStoreState(state=>state.simulationTab.knockedOutGenes);
+
+    const analysisSLInfo = useStoreState(state => state.simulationTab.currentSyntheticLethalityModel);
 
     const {runFluxBalanceAnalysis,runFluxVariabilityAnalysis,runEssentiality,runSyntheticLethality}=useStoreActions(actions => actions.simulationTab)
+    const {resetUpdatedReactions,resetUpdatedGenes,resetKnockedOutReactions} = useStoreActions(actions => actions.simulationTab)
 
     function runFBA(e) {
         e.preventDefault();
@@ -60,24 +56,35 @@ function SimulationTab() {
                 reactions: updatedReactions,
                 genes: updatedGenes
             })
+        toast.info("Running the Simulation")
+        resetUpdatedReactions();
+        resetUpdatedGenes();
+        resetKnockedOutReactions();
     }
     function runFVA(e) {
-        console.log(updatedReactions)
         e.preventDefault();
         runFluxVariabilityAnalysis({
             reactions: updatedReactions,
             genes: updatedGenes
         })
+        toast.info("Running the Simulation")
+        resetUpdatedReactions();
+        resetUpdatedGenes();
+        resetKnockedOutReactions();
     }
     function runEssentialityFunction(e) {
         e.preventDefault();
         runEssentiality({
-            str: "essentiality"
+            reactions: updatedReactions,
+            genes: updatedGenes
         })
+        toast.info("Running the Simulation")
+        resetUpdatedReactions();
+        resetUpdatedGenes();
+        resetKnockedOutReactions();
     }
     function runSyntheticLethalityFunction(e) {
         e.preventDefault();
-        console.log(knockedOutReactions);
         if(knockedOutReactions.length>2){
             openNotificationWithIcon('error')
         }
@@ -87,7 +94,16 @@ function SimulationTab() {
                 genes: updatedGenes
             })
         }
+        toast.info("Running the Simulation")
+        resetUpdatedReactions();
+        resetUpdatedGenes();
+        resetKnockedOutReactions();
     }
+    function reset() {
+        resetUpdatedReactions();
+        resetUpdatedGenes();
+    }
+
     return(
         <React.Fragment>
 
@@ -95,28 +111,28 @@ function SimulationTab() {
                     <NavItem>
                         <NavLink
                             className={classnames({ active: activeTab === 1 })}
-                            onClick={() => { toggle(1) }}>
+                            onClick={() => { toggle(1); reset() }}>
                             Flux Balance Analysis
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
                             className={classnames({ active: activeTab === 2 })}
-                            onClick={() => { toggle(2) }}>
+                            onClick={() => { toggle(2); reset()}}>
                             Flux Variability Analysis
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
                             className={classnames({ active: activeTab === 3 })}
-                            onClick={() => { toggle(3) }}>
+                            onClick={() => { toggle(3); reset() }}>
                             Essentiality
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
                             className={classnames({ active: activeTab === 4 })}
-                            onClick={() => { toggle(4) }}>
+                            onClick={() => { toggle(4); reset()}}>
                             Synthetic Lethality
                         </NavLink>
                     </NavItem>
@@ -144,21 +160,21 @@ function SimulationTab() {
                                             updatedReactions={analysisReactions}/>
                                     </Col>
                                     <Col md="7">
-                                            <FluxControlForFBA
-                                                height={"325px"}
-                                                knockOff={false}
-                                                updatedReactions={updatedReactions}
-                                                reactions={reactions}
-                                            />
-                                            <br/>
-                                            <GeneControlForFBA
-                                                updatedGenes={updatedGenes}
-                                                genes={genes}/>
+                                        <FluxControl
+                                          knockOff={false}
+                                          height={"325px"}
+                                          updatedReactions={updatedReactions}
+                                          reactions={cloneDeep(reactions)}
+                                        />
+                                        <br/>
+                                        <GeneControl
+                                          updatedGenes={updatedGenes}
+                                          genes={cloneDeep(genes)}/>
                                     </Col>
                                 </Row>
                             </Col>
                             <Col md="5" >
-                                <SimulationGraph metabolites={analysisMetabolites} reactions={analysisReactions}  />
+                                <Visualisation />
                             </Col>
                         </Row>
                     </TabPane>
@@ -181,11 +197,12 @@ function SimulationTab() {
                                         <br/><hr/>
                                     </Col>
                                     <Col md="8">
-                                        <FluxControlForFVA
-                                            knockOff={true}
-                                            height={"325px"}
-                                            updatedReactions={updatedReactions}
-                                            reactions={currentFVAReactions}
+                                        <FluxControl
+                                          knockOff={true}
+                                          height={"325px"}
+                                          updatedReactions={updatedReactions}
+                                          reactions={cloneDeep(reactions)}
+                                          knockedOutReactions={[]}
                                         />
                                     </Col>
                                 </Row>
@@ -194,9 +211,9 @@ function SimulationTab() {
                                         <AnalysisInfo name={analysisFVAName} info={analysisFVAInfo}/>
                                     </Col>
                                     <Col md="8">
-                                        <GeneControlForFVA
+                                        <GeneControl
                                             updatedGenes={updatedGenes}
-                                            genes={currentFVAGenes}/>
+                                            genes={cloneDeep(genes)}/>
                                     </Col>
                                 </Row>
                             </Col>
@@ -221,24 +238,24 @@ function SimulationTab() {
                                             </Button>
                                         </h3>
                                         <br/><hr/>
-                                        HERE THE USER WILL BE ABLE TO KNOCK OFF REACTIONS AND CONTROL FLUXES.
-                                        BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControlForEssentiality
-                                            height={"750px"}
+                                        <FluxControl
                                             knockOff={true}
+                                            height={"750px"}
                                             updatedReactions={updatedReactions}
-                                            reactions={reactions}
-                                        />
+                                            reactions={cloneDeep(reactions)}
+                                            knockedOutReactions={[]}
+                                            />
                                     </Col>
                                 </Row>
                             </Col>
                             <Col md="5" >
                                 <EssentialComponents
                                     height={"750px"}
-                                    analysisReactions={analysisReactions}
-                                    analysisGenes={analysisGenes}/>
+                                    analysisReactions={analysisEssentialityReactions}
+                                    analysisGenes={analysisEssentialityGenes}
+                                />
                             </Col>
                         </Row>
                     </TabPane>
@@ -256,17 +273,14 @@ function SimulationTab() {
                                             </Button>
                                         </h3>
                                         <br/><hr/>
-                                        HERE THE USER WILL BE ABLE TO KNOCK OFF REACTIONS OR GENES.
-                                        IT WILL BE IN PAIR, TWO REACTIONS OR TWO GENES.
-                                        BASED UPON THAT I WILL CALCULATE THE ESSENTIAL REACTIONS, FOR NOW, I HAVE DISPLAYED ALL THE REACTIONS AND GENES JUST TO SHOW, HOW IT WOULD LOOK
                                     </Col>
                                     <Col md="8">
-                                        <FluxControlForSL
-                                            knockOff={true}
-                                            height={"325px"}
-                                            knockedOutReactions={knockedOutReactions}
-                                            updatedReactions={updatedReactions}
-                                            reactions={reactions}
+                                        <FluxControl
+                                          knockOff={true}
+                                          height={"325px"}
+                                          updatedReactions={updatedReactions}
+                                          reactions={cloneDeep(reactions)}
+                                          knockedOutReactions={knockedOutReactions}
                                         />
                                     </Col>
                                 </Row>
@@ -275,17 +289,22 @@ function SimulationTab() {
                                         <AnalysisInfo name={name} />
                                     </Col>
                                     <Col md="8">
-                                        <GeneControlForFBA
-                                            updatedGenes={updatedGenes}
-                                            genes={genes}/>
+                                        <GeneControl
+                                          updatedGenes={updatedGenes}
+                                          genes={cloneDeep(genes)}/>
                                     </Col>
                                 </Row>
                             </Col>
                             <Col md="5" >
-                                <EssentialComponents
-                                    height={"750px"}
-                                    analysisReactions={analysisReactions}
-                                    analysisGenes={analysisGenes}/>
+                                <Row style={{padding: "20px"}}>
+                                    <Col md="12">
+                                        {
+                                            analysisSLInfo?
+                                              analysisSLInfo.lethal?<Alert message="Lethal" type="success" />:<Alert message="Not Lethal" type="error" />
+                                              : null
+                                        }
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </TabPane>

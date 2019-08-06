@@ -3,7 +3,7 @@ import cobra
 import json
 from cobra.flux_analysis import flux_variability_analysis
 
-path = './uploads/sbmlFile'
+path = sys.argv[1]
 
 initialModel = cobra.io.load_json_model(path)
 
@@ -70,6 +70,7 @@ for g in range(len(initialModel.genes)):
 
 data = {
         "name": initialModel.name,
+        "i" : i,
         "objective_value" : solution.objective_value,
 #        "metabolites": metabolitesData,
         "reactions": reactionData,

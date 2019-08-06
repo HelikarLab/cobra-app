@@ -2,7 +2,7 @@ import sys
 import cobra
 import json
 
-path = './uploads/sbmlFile'
+path = sys.argv[1]
 
 initialModel = cobra.io.load_json_model(path)
 
@@ -11,8 +11,12 @@ analysisModel = json.loads(sys.argv[2])
 for initialReaction in range(len(initialModel.reactions)):
     for updatedReaction in range(len(analysisModel['reactions'])):
         if(initialModel.reactions[initialReaction].id==analysisModel['reactions'][updatedReaction]['id']):
-            initialModel.reactions[initialReaction].lower_bound = analysisModel['reactions'][updatedReaction]['lower_bound']
-            initialModel.reactions[initialReaction].upper_bound = analysisModel['reactions'][updatedReaction]['upper_bound']
+            if('upper_bound' in analysisModel['reactions'][updatedReaction]):
+                initialModel.reactions[initialReaction].lower_bound = analysisModel['reactions'][updatedReaction]['lower_bound']
+                initialModel.reactions[initialReaction].upper_bound = analysisModel['reactions'][updatedReaction]['upper_bound']
+            if('functional' in analysisModel['reactions'][updatedReaction]):
+                if(analysisModel['reactions'][updatedReaction]['functional']==False):
+                    initialModel.reactions[initialReaction].knock_out()
 
 for initialGene in range(len(initialModel.genes)):
     for updatedGene in range(len(analysisModel['genes'])):

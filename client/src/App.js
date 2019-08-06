@@ -1,10 +1,10 @@
 import React from 'react'
 import { Modal, ModalHeader, ModalBody } from 'reactstrap'
-import NavBar from './components/NavBar'
+import NavBar from './components/Navbar'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import ImportSbmlForm from './components/ImportSbmlForm'
-import SavedModels from './components/SavedModels'
+import ImportSbmlForm from './components/Navbar/ImportSbmlForm'
+import SavedModels from './components/Navbar/SavedModels'
 toast.configure({
     position: toast.POSITION.BOTTOM_RIGHT,
     autoClose: 2000,

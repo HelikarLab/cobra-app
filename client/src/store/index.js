@@ -83,7 +83,7 @@ const model = {
         },
         currentAnalysisModel:{
             metabolites: null,
-            reactions: null,
+            reactions: [],
         },
         //thunks
         saveModel: thunk((actions, payload, { getStoreState }) => {
@@ -99,12 +99,15 @@ const model = {
                 .catch(err => ({ message: 'Something went wrong.', error: true }))
         }),
         //actions
+        updateModelReactions: action((state,payload)=>{
+            state.currentModel.reactions = payload
+        }),
         setCurrentModel: action((state, payload) => {
             state.currentModel = payload
         }),
         setCurrentAnalysisModel : action((state,payload)=>{
             state.currentAnalysisModel = payload
-        }),
+        })
     },
 
     simulationTab: {
@@ -120,8 +123,7 @@ const model = {
         currentFBAModel: {},
         currentFVAModel : {},
         currentEssentialityModel : {},
-        currentSyntheticLethalityModel : {
-        },
+        currentSyntheticLethalityModel : null,
 
         //thunks
         runFluxBalanceAnalysis : thunk((actions, payload)=>{
@@ -137,7 +139,10 @@ const model = {
                     const json = JSON.parse(res.data);
                     actions.setCurrentFBAModel(json);
                 })
-                .catch(err=>console.log(err))
+                .catch(err => {
+                  console.log(err)
+                  return { error: true, message: 'Something went wrong.' }
+                })
         }),
         runFluxVariabilityAnalysis : thunk((actions, payload)=>{
             const formData = new FormData();
@@ -156,6 +161,7 @@ const model = {
         }),
         runEssentiality : thunk((actions,payload)=>{
             const formData = new FormData();
+            console.log(payload)
             formData.append('model',JSON.stringify(payload));
             axios({
                 method: 'post',
@@ -186,6 +192,19 @@ const model = {
         }),
 
         //actions
+
+        resetUpdatedReactions: action((state,payload)=>{
+            state.updatedReactions = []
+        }),
+        resetUpdatedGenes: action((state,payload)=>{
+          state.updatedGenes= []
+        }),
+        resetKnockedOutReactions: action((state,payload)=>{
+           state.knockedOutReactions=[]
+        }),
+        updateSimulationReactions : action((state,payload)=>{
+            state.updatedReactions = payload
+        }),
         setCurrentFBAModel : action((state,payload)=>{
             state.currentFBAModel = payload
         }),

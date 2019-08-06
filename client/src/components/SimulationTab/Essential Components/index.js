@@ -1,16 +1,18 @@
 import React from 'react'
 import {Row,Col,Table} from 'reactstrap'
 import "react-input-range/lib/css/index.css"
+import { Alert } from 'antd';
 
 function EssentialComponents(props){
     if (props.analysisReactions && props.analysisGenes) {
+      console.log(props.analysisReactions)
         const reactionsTableData = props.analysisReactions.map((reaction,index) => {
             return (
                 <tr data-div_id={reaction.id}
                     key={reaction.id}>
                     <td >{reaction.id}</td>
-                    <td >{reaction.flux}
-                    </td>
+                    {/*<td >{reaction.flux}*/}
+                    {/*</td>*/}
                 </tr>)
         });
 
@@ -42,9 +44,15 @@ function EssentialComponents(props){
                         <Col md="6">
                             <Table borderless>
                                 <thead>
-                                <tr >
+                                  <th>
+                                    Total number of Essential Reactions: &nbsp;
+                                    {props.analysisReactions.length}
+                                  </th>
+                                </thead>
+                                <hr/>
+                                <thead>
+                                <tr>
                                     <th >Reaction Id</th>
-                                    <th >Flux Values</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -55,9 +63,15 @@ function EssentialComponents(props){
                         <Col md="6">
                             <Table borderless>
                                 <thead>
+                                <th>
+                                  Total number of Essential Genes: &nbsp;
+                                  {props.analysisGenes.length}
+                                </th>
+                                </thead>
+                                <hr/>
+                                <thead>
                                 <tr >
                                     <th >Gene Id</th>
-                                    <th >Gene Name</th>
                                 </tr>
                                 </thead>
                                 <tbody>

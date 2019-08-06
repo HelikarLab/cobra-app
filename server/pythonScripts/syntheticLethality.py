@@ -2,9 +2,12 @@ import sys
 import cobra
 import json
 
-path = './uploads/sbmlFile'
+path = sys.argv[1]
+
 initialModel = cobra.io.load_json_model(path)
+
 analysisModel = json.loads(sys.argv[2])
+
 i=0
 
 for initialReaction in range(len(initialModel.reactions)):
@@ -29,11 +32,12 @@ lethal = False
 if(solution==0):
     lethal = True
 
-
 data = {
         "name": initialModel.name,
+        "i" : i,
         "objective_value" : solution.objective_value,
         "lethal": lethal,
+        "analysisReactions": analysisModel['reactions']
 #        "metabolites": metabolitesData,
 #        "reactions": reactionData,
 #        "genes": genesData

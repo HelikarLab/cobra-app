@@ -11,7 +11,7 @@ function FluxResultsForFVA(props){
                     key={reaction.id}>
                     <td >{reaction.id}</td>
                     <td >{reaction.minimum}</td>
-                    <td >{reaction.minimum}</td>
+                    <td >{reaction.maximum}</td>
                 </tr>)
         });
 
