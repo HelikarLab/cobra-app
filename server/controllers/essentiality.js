@@ -2,18 +2,20 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 
 module.exports = async function (req, res) {
-
+    const file= (Object.values(req.fields)[1])
     try {
-        fs.writeFile("./analysis/modelForEssentiality.json", Object.values(req.fields)[0], function (err) {
-                if (err) throw err;
-                console.log('complete');
-            }
-        );
+
+        /*
+                fs.writeFile("./analysis/modelForFBA.json", Object.values(req.fields)[0], function (err) {
+                        if (err) throw err;
+                        console.log('complete');
+                    }
+                );
+        */
 
         const options = {
-            args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
+            args: [`./uploads/${file}`, Object.values(req.fields)[0]]
         };
-
 
         PythonShell.run('pythonScripts/essentiality.py', options, function (err, data) {
             if (err) {

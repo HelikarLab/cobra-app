@@ -62,8 +62,11 @@ function SimulationTab() {
         resetKnockedOutReactions();
     }
     function runFVA(e) {
+        console.log(filename)
+        console.log(updatedReactions)
         e.preventDefault();
         runFluxVariabilityAnalysis({
+            filename: filename,
             reactions: updatedReactions,
             genes: updatedGenes
         })
@@ -75,6 +78,7 @@ function SimulationTab() {
     function runEssentialityFunction(e) {
         e.preventDefault();
         runEssentiality({
+            filename: filename,
             reactions: updatedReactions,
             genes: updatedGenes
         })
@@ -90,6 +94,7 @@ function SimulationTab() {
         }
         else{
             runSyntheticLethality({
+                filename: filename,
                 reactions: updatedReactions,
                 genes: updatedGenes
             })

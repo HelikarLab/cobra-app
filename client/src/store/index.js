@@ -145,8 +145,10 @@ const model = {
                 })
         }),
         runFluxVariabilityAnalysis : thunk((actions, payload)=>{
+            console.log(payload)
             const formData = new FormData();
             formData.append('model', JSON.stringify(payload));
+            formData.append('file',payload.filename)
             axios({
                 method: 'post',
                 url: `${API_URL}/api/model/id/fva/optimize`,
@@ -161,8 +163,8 @@ const model = {
         }),
         runEssentiality : thunk((actions,payload)=>{
             const formData = new FormData();
-            console.log(payload)
             formData.append('model',JSON.stringify(payload));
+            formData.append('file',payload.filename)
             axios({
                 method: 'post',
                 url: `${API_URL}/api/model/id/essentiality/optimize`,
@@ -178,6 +180,7 @@ const model = {
         runSyntheticLethality: thunk((actions,payload)=>{
             const formData = new FormData();
             formData.append('model',JSON.stringify(payload));
+            formData.append('file',payload.filename)
             axios({
                 method: 'post',
                 url: `${API_URL}/api/model/id/syntheticlethality/optimize`,

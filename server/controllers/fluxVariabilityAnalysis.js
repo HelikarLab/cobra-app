@@ -2,17 +2,25 @@ const { PythonShell } = require('python-shell');
 const fs = require('fs');
 
 module.exports = async function (req, res) {
+    const file= (Object.values(req.fields)[1])
 
+    console.log("inside controller")
     try {
-        fs.writeFile("./analysis/analysisModel.json", Object.values(req.fields)[0], function (err) {
-                if (err) throw err;
-                console.log('complete');
-            }
-        );
+
+        /*
+                fs.writeFile("./analysis/modelForFBA.json", Object.values(req.fields)[0], function (err) {
+                        if (err) throw err;
+                        console.log('complete');
+                    }
+                );
+        */
 
         const options = {
-            args: ['./uploads/sbmlFile', Object.values(req.fields)[0]]
+            args: [`./uploads/${file}`, Object.values(req.fields)[0]]
         };
+
+        console.log(options.args[0]);
+
 
         PythonShell.run('pythonScripts/fluxVariabilityAnalysis.py', options, function (err, data) {
             if (err) {

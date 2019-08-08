@@ -5,11 +5,14 @@ module.exports = async function (req, res) {
     const file= (Object.values(req.fields)[1])
 
     try {
+
+/*
         fs.writeFile("./analysis/modelForFBA.json", Object.values(req.fields)[0], function (err) {
                 if (err) throw err;
                 console.log('complete');
             }
         );
+*/
 
         const options = {
             args: [`./uploads/${file}`, Object.values(req.fields)[0]]
