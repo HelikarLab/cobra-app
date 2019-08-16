@@ -75,6 +75,8 @@ for r in range(len(initialModel.reactions)):
 #                        'gene_reaction_rule' : initialModel.reactions[r].gene_reaction_rule
                         })
 
+#### the above list of comments are not removed thinking maybe they might be used in future. If not, they can be removed
+
 ##### adding metabolite metadata
 metabolitesData = []
 m = 0

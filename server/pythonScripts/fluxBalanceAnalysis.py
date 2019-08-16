@@ -71,6 +71,7 @@ for r in range(len(initialModel.reactions)):
 metabolitesData = []
 m = 0
 for m in range(len(initialModel.metabolites)):
+    ##### adding metabolite metadata
     metabolitesData.append({'id':initialModel.metabolites[m].id,
                             'name' : initialModel.metabolites[m].name,
                             'formula':initialModel.metabolites[m].formula,
@@ -80,6 +81,7 @@ for m in range(len(initialModel.metabolites)):
 genesData = []
 g = 0
 for g in range(len(initialModel.genes)):
+    ##### adding gene metadata
     genesData.append({'id':initialModel.genes[g].id,
                       'name' : initialModel.genes[g].name,
                       'functional':initialModel.genes[g].functional})
