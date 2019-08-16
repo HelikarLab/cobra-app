@@ -27,7 +27,9 @@ After this open up a browser and go to http://localhost:3000
 
 ```
  |- client              -> Contains the code of the react client
+    |-cypress           -> Unit tests for UI
     |- src              -> Source files of the react client
+        |- assets       -> Images
         |- components   -> React components
         |- store        -> Redux store
  |- server              -> Contains the code of the node server
@@ -35,7 +37,8 @@ After this open up a browser and go to http://localhost:3000
     |- controllers      -> API controllers
     |- models           -> Sequelize(SQL) models
     |- config           -> Configuration files for the database
-    |- sbmlParser.py    -> Python script to parse a SBML file into a JSON object using libsbml
+    |- pythonScripts    -> Python scripts for parsing and analysing models
+    |- scripts          -> scripts to handle backend architecture
  |- docker-compose.yml  -> Docker Compose files that runs the application using docker
  |- package.json        -> The main package.json governing the yarn workspaces
  |- README.md           -> The main documentation file. Also this file :)
@@ -77,6 +80,13 @@ Follow the instructions below to get the app up and running in development:
 
   ```bash
   yarn dev
+  ```
+- To run unit tests:
+    - You can change configuration of cypress in `client/cypress.json`
+    
+  ```bash
+  cd client
+  yarn run cypress open
   ```
 
 - You can download a SBML file from the following link incase you don't have a file which is formatted for constraint based models(FBA models).

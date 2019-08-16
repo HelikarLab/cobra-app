@@ -29,9 +29,8 @@ function SavedModels() {
                     if (data.error) toast.error(data.message)
                     else toast.success(data.message)
                   }}
-                  key={item.id}
-              >
-                {item.name} -{' '}
+                  key={item.id}>
+                Model Name: {item.name} -{' '}
                 {format(new Date(item.createdAt), 'D MMMM YYYY - hh:mm:ss A')}
               </ListGroupItem>
           ))}

@@ -9,7 +9,7 @@ function MetabolitesList(props) {
     if (props.metabolites) {
         const tableData = props.metabolites.map(metabolite => {
             return (
-                <tr
+                <tr id="metabolite-row"
                     onClick={() => {
                          props.setInfo(metabolite)
                          props.setType('metabolite')
@@ -37,7 +37,7 @@ function MetabolitesList(props) {
                             <th>Name</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="metabolite-list">
                         {tableData}
                         </tbody>
                     </Table>

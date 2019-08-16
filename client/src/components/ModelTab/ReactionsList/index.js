@@ -15,6 +15,7 @@ function ReactionsList(props) {
                        props.setInfo(reaction)
                        props.setType('reaction')
                    }}
+                    id="reaction-row"
                     data-div_id={reaction.id}
                     key={reaction.id} >
 
@@ -39,7 +40,7 @@ function ReactionsList(props) {
                             <th style={{width: "35%"}}>Equation</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="reaction-list">
                         {tableData}
                         </tbody>
                     </Table>

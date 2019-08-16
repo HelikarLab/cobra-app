@@ -295,6 +295,7 @@ class Graph extends React.Component {
                   this.state && this.state.compartments && this.state.compartments.map((compartment,index)=>{
                     return(
                         <DropdownItem
+                            id="compartment-item"
                             key={index}
                             onClick={
                               this.selectCompartment(compartment)

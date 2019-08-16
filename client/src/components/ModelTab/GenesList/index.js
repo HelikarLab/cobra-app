@@ -9,7 +9,7 @@ function GenesList(props) {
     if (props.genes) {
         const tableData = props.genes.map(gene => {
             return (
-                <tr
+                <tr id="gene-row"
                     onClick={() => {
                         props.setInfo(gene)
                         props.setType('gene')
@@ -37,7 +37,7 @@ function GenesList(props) {
                             <th>Functional</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="gene-list">
                         {tableData}
                         </tbody>
                     </Table>
