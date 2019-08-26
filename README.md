@@ -1,5 +1,7 @@
  # Flux Balance Analysis
- Web Pipeline For Flux Balance Analysis (Constraint Based Model)
+ Web Pipeline For Flux Balance Analysis (Constraint Based Model). 
+ 
+ This repository was created as a part of Google Summer of Code 2019.
                 
 ## To start the application
 
@@ -31,7 +33,7 @@ After this open up a browser and go to http://localhost:3000
     |- src              -> Source files of the react client
         |- assets       -> Images
         |- components   -> React components
-        |- store        -> Redux store
+        |- store        -> State Management store
  |- server              -> Contains the code of the node server
     |- routes           -> API routes
     |- controllers      -> API controllers

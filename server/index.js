@@ -41,7 +41,9 @@ const syntheticLethality = require("./routes/syntheticLethality");
 
 
 // Establishing and testing database connection
-//Remove comment on db.sync({ force: true }) to create every table again
+
+// TO REMOVE DATA FROM DATABASE OR TO RESYNC THE DATABSE, REMOVE COMMENT "db.sync({force: true})"
+
 const connectDb = async (retries = 5) => {
   while (retries) {
     await db
