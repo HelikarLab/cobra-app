@@ -12,7 +12,7 @@ path = sys.argv[1]
 
 
 ##### loading original model from the original path
-initialModel = cobra.io.load_json_model(path)
+initialModel = cobra.io.read_sbml_model(path)
 # loading the changed components passed from UI
 analysisModel = json.loads(sys.argv[2])
 
@@ -38,16 +38,14 @@ for initialGene in range(len(initialModel.genes)):
 solution = initialModel.optimize()
 
 #### changing the lethal flag based upon objective value
-#lethal = False
-# if(solution==0):
-# lethal = True
+lethal = False
+if(solution==0):
+    lethal = True
 
-solution==0?lethal=True:lethal=False
 
 ##### creating the final JSON format to send back via express routes
 data = {
         "name": initialModel.name,
-        "i" : i,
         "objective_value" : solution.objective_value,
         "lethal": lethal,
         "analysisReactions": analysisModel['reactions']

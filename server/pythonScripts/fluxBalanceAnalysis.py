@@ -10,7 +10,7 @@ import json
 path = sys.argv[1]
 
 ##### loading original model from the original path
-initialModel = cobra.io.load_json_model(path)
+initialModel = cobra.io.read_sbml_model(path)
 # loading the changed components passed from UI
 analysisModel = json.loads(sys.argv[2])
 

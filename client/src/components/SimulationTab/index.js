@@ -93,13 +93,13 @@ function SimulationTab() {
             openNotificationWithIcon('error')
         }
         else{
+            toast.info("Running the Simulation")
             runSyntheticLethality({
                 filename: filename,
                 reactions: updatedReactions,
                 genes: updatedGenes
             })
         }
-        toast.info("Running the Simulation")
         resetUpdatedReactions();
         resetUpdatedGenes();
         resetKnockedOutReactions();

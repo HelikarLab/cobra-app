@@ -19,6 +19,7 @@ module.exports = async function (req, res) {
         };
 
 
+        console.log(options.args);
         PythonShell.run('pythonScripts/fluxBalanceAnalysis.py', options, function (err, data) {
             if (err) {
                 console.error(err);

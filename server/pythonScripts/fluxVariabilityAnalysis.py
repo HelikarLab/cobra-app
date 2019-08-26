@@ -12,7 +12,7 @@ path = sys.argv[1]
 
 
 ##### loading original model from the original path
-initialModel = cobra.io.load_json_model(path)
+initialModel = cobra.io.read_sbml_model(path)
 # loading the changed components passed from UI
 analysisModel = json.loads(sys.argv[2])
 
@@ -92,7 +92,6 @@ for g in range(len(initialModel.genes)):
 ##### creating the final JSON format to send back via express routes
 data = {
         "name": initialModel.name,
-        "i" : i,
         "objective_value" : solution.objective_value,
         "reactions": reactionData,
 #        "metabolites": metabolitesData,
