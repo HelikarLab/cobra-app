@@ -1,0 +1,81 @@
+version: "3.4"
+
+x-defaults: &defaults
+  restart: always
+
+services:
+  db:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/base/db/Dockerfile
+    networks:
+      - db
+    volumes:
+      - production_db_data:/var/lib/postgresql/data
+      - production_db_backups:/backups
+    env_file:
+      - ./.envs/.production/.db
+
+  web:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/base/web/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - db
+      - web
+    volumes:
+      - ./app/server:/app:rw,cached
+      - production_web_node_modules:/app/node_modules
+      - production_web_uploads:/app/uploads
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./.envs/.production/.web
+    command: /start
+
+  app:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/production/app/Dockerfile
+    depends_on:
+      - web
+    volumes:
+      - ./app/client:/app:rw,cached
+      - production_app_node_modules:/app/node_modules
+    networks:
+      - web
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.envs/.production/.app
+    command: /start
+
+  proxy:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/production/proxy/Dockerfile
+    networks:
+      - web
+    env_file:
+      - ./.envs/.production/.proxy
+
+networks:
+  db:
+    driver: bridge
+  web:
+    driver: bridge
+
+volumes:
+  production_db_data: {  }
+  production_db_backups: { }
+  
+  production_web_node_modules: { }
+  production_app_node_modules: { }
+
+  production_web_uploads: { }

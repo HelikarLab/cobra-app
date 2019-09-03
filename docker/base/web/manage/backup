@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+basedir="$(dirname "${0}")"
+
+source "${basedir}/includes/constants"
+
+filename="static.tar.gz"
+filepath="${PATH_BACKUPS}/${filename}"
+
+mkdir -p "${PATH_BACKUPS}"
+
+tar czvf "${filepath}" /app/uploads
+
+echo "Backup created successfully at ${filepath}"

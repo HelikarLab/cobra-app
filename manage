@@ -1,0 +1,163 @@
+#!/bin/bash
+
+set -e
+
+APP_ENVIRONMENT="${APP_ENVIRONMENT:-"development"}"
+
+function setup_env
+{
+	export APP_GIT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+	export APP_GIT_COMMIT=$(git rev-parse --verify HEAD)
+}
+
+function docker_compose
+{
+	docker_compose_file="docker-compose.yml";
+
+	case "$1" in
+		production)
+			docker_compose_file="docker-compose.production.yml"
+			;;
+		test)
+			docker_compose_file="docker-compose.test.yml"
+			;;
+	esac
+
+	eval $(echo "docker-compose -f "$docker_compose_file" "${@:2}"")
+}
+
+function docker_compose_run_rm
+{
+	eval $(echo "docker_compose "${1}" "run --rm ${@:2}"")
+}
+
+function docker_compose_run_rm_web_db
+{
+	eval $(echo "docker_compose "${1}" "run --rm web yarn run db ${@:2}"")
+}
+
+function parse_args
+{
+	environment=$APP_ENVIRONMENT;
+
+	while getopts ":he" opt; do
+		case "${opt}" in
+			h)
+				echo "Usage:"
+				echo "	./manage -h                          Display the help message and exit."
+				echo "	./manage backup                      Backup files and databases."
+				echo "	./manage backups                     List all backups."
+				echo "	./manage build:spa                   Build web application."
+				echo "	./manage check                       Check status of all services."
+				printf "\n"
+
+				echo "DataBase Commands"
+				echo "	./manage db restore /path/to/backup  Restore a DataBase backup."
+				echo "	./manage db shell                    Launch a DataBase shell."
+				echo "	./manage db seed                     Seed the DataBase."
+				echo "	./manage db migrate					 Perform Migratons."
+				printf "\n"
+
+				exit 0
+				;;
+			e)
+				environment=$1
+				exit 0
+				;;
+			\?)
+				echo "Invalid Option: -$OPTARG" 1>&2
+				exit 1
+				;;
+		esac
+	done
+	shift $((OPTIND -1))
+
+	command=$1;
+	case "${command}" in
+		backup)
+			for i in db app web; do
+				docker_compose_run_rm "$environment" "$i backup"
+			done
+			exit 0
+			;;
+		backups)
+			for i in db app web; do
+				docker_compose_run_rm "$environment" "$i backups"
+			done
+			exit 0
+			;;
+		build:spa)
+			docker_compose_run_rm "$environment" "web yarn run build:${APP_ENVIRONMENT}"
+			exit 0
+			;;
+		build:locales)
+			docker_compose_run_rm "$environment" "web yarn run build:langs"
+			exit 0
+			;;
+		db)
+			db_command=$2;
+			case "${db_command}" in
+				seed)
+					docker_compose_run_rm_web_db "$environment" "db:seed:all"
+					exit 0
+					;;
+				migrate)
+					docker_compose_run_rm_web_db "$environment" "db:migrate"
+					exit 0
+					;;
+				*)
+					docker_compose_run_rm "$environment" "$@"
+					exit 0
+					;;
+			esac
+			exit 0
+			;;
+		web|app|proxy)
+			docker_compose_run_rm "$environment" "$@"
+			exit 0
+			;;
+		check)
+			service_name=$2;
+			case "${service_name}" in
+				db|app|web)
+					echo "Checking service ${service_name}..."
+					docker_compose_run_rm "$environment" "$service_name" "check"
+					exit 0
+					;;
+				*)
+					for i in db app web; do
+						echo "Checking service $i..."
+						docker_compose_run_rm "$environment" "$i" "check"
+					done
+					exit 0
+					;;
+			esac
+			exit 0
+			;;
+		printenv)
+			for i in db app web; do
+				echo "Environment Variables $i"
+				printf "\n"
+				docker_compose_run_rm "$environment" "$i" "printenv | sort"
+
+				if [[ $i != "web" ]]; then
+					printf "\n"
+					printf "\n"
+				fi
+			done
+			exit 0
+			;;
+		*)
+			docker_compose "$environment" "$@"
+			exit 0
+			;;
+	esac
+}
+
+function main
+{
+	setup_env
+	parse_args "$@"
+}
+
+main "$@"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+basedir="$(dirname "${0}")"
+
+source "${basedir}/includes/constants"
+
+echo "Listing db backups..."
+ls -lHs "${PATH_BACKUPS}" 2> /dev/null

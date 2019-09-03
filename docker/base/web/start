@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+timeout=3
+
+if [[ "${APP_ENVIRONMENT}" == "production" ]]; then
+    start_type="docker"
+else
+    start_type="development"
+fi
+
+echo "Starting Web service...";
+yarn start:$start_type

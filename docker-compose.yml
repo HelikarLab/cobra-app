@@ -1,16 +1,71 @@
-version: "3"
+version: "3.4"
+
+x-defaults: &defaults
+  restart: always
 
 services:
+  db:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/base/db/Dockerfile
+    networks:
+      - db
+    volumes:
+      - development_db_data:/var/lib/postgresql/data
+      - development_db_backups:/backups
+    env_file:
+      - ./.envs/.development/.db
 
-
-  server:
-    build: server/
-    command: yarn start
+  web:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/base/web/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - db
+      - web
+    volumes:
+      - ./app/server:/app:rw,cached
+      - development_web_node_modules:/app/node_modules
+      - development_web_uploads:/app/uploads
     ports:
-      - 5000:5000
+      - "5000:5000"
+    env_file:
+      - ./.envs/.development/.web
+    command: /start
 
-  client:
-    build: client/
-    command: yarn start
+  app:
+    <<: *defaults
+    build:
+      context: .
+      dockerfile: ./docker/development/app/Dockerfile
+    depends_on:
+      - web
+    volumes:
+      - ./app/client:/app:rw,cached
+      - development_app_node_modules:/app/node_modules
+    networks:
+      - web
     ports:
-      - 3000:3000
+      - "3000:3000"
+    env_file:
+      - ./.envs/.development/.app
+    command: /start
+
+networks:
+  db:
+    driver: bridge
+  web:
+    driver: bridge
+
+volumes:
+  development_db_data: {  }
+  development_db_backups: { }
+  
+  development_web_node_modules: { }
+  development_app_node_modules: { }
+
+  development_web_uploads: { }

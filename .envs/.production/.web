@@ -1,0 +1,7 @@
+APP_ENVIRONMENT=production
+
+APP_DB_HOST=db
+APP_DB_PORT=5432
+APP_DB_NAME=postgres
+APP_DB_USERNAME=postgres
+APP_DB_PASSWORD=postgres

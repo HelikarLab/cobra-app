@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+curl -fsSL "http://${APP_WEB_HOST}:${APP_WEB_PORT}/status" | grep -q "ok" && echo "OK"

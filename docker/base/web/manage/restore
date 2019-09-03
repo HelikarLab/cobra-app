@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+basedir="$(dirname "${0}")"
+
+source "${basedir}/includes/constants"
+
+if [[ -z "${1}" ]]; then
+    echo "Backup filename required."
+    exit 1
+fi
+
+filepath="${1}"
+
+echo "Restoring "${filepath}"..."
+tar -xvzf "${filepath}" -C /app
