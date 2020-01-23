@@ -25,7 +25,7 @@ RUN yarn install --pure-lockfile
 
 COPY ./app/server /app
 
-COPY ./docker/base/app/manage /manage
+COPY ./docker/base/web/manage /manage
 
 RUN chmod +x /manage/* \
     && mv /manage/* /usr/local/bin \

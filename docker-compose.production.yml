@@ -41,7 +41,7 @@ services:
     <<: *defaults
     build:
       context: .
-      dockerfile: ./docker/production/app/Dockerfile
+      dockerfile: ./docker/development/app/Dockerfile
     depends_on:
       - web
     volumes:
@@ -60,6 +60,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/production/proxy/Dockerfile
+    volumes: 
+     - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - web
     env_file:

@@ -3,7 +3,7 @@ version: "3.4"
 x-defaults: &defaults
   restart: always
 
-services:
+services: 
   db:
     <<: *defaults
     build:

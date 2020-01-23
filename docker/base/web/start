@@ -10,5 +10,5 @@ else
     start_type="development"
 fi
 
-echo "Starting Web service...";
+echo "Starting Web service... "  ${APP_ENVIRONMENT};
 yarn start:$start_type

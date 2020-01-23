@@ -156,6 +156,7 @@ function parse_args
 
 function main
 {
+	echo $APP_ENVIRONMENT
 	setup_env
 	parse_args "$@"
 }
